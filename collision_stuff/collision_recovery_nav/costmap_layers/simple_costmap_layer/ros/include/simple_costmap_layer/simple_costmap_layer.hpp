@@ -6,7 +6,7 @@
 #include <costmap_2d/GenericPluginConfig.h>
 #include <dynamic_reconfigure/server.h>
 
-namespace simple_layer_namespace
+namespace simple_costmap_layer
 {
 
 class SimpleLayer : public costmap_2d::Layer
@@ -27,4 +27,3 @@ private:
 };
 }
 #endif
-

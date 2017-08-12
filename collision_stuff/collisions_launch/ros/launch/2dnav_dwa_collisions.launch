@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="robot" default="$(optenv ROBOT !!ROBOT NOT SET!!)" />
+    <arg name="robot_env" default="$(optenv ROBOT_ENV !!ROBOT_ENV NOT SET!!)" />
+
+    <!-- delete old parameters -->
+    <rosparam command="delete" param="/move_base"/>
+
+    <!-- common navigation launch file -->
+    <include file="$(find collisions_launch)/ros/launch/nav_common.launch">
+        <arg name="robot_env" value="$(arg robot_env)" />
+    </include>
+
+    <!-- move_base navigation -->
+    <node pkg="move_base" type="move_base" respawn="true" name="move_base" output="screen">
+        <!-- Remap from cmd_vel to care-o-bot 3 base controller topics -->
+        <remap from="cmd_vel" to="/base/twist_mux/command_navigation"/>
+        <remap from="odom" to="base_controller/odometry"/>
+        <remap from="~force_field_recovery/cmd_vel" to="/base/twist_mux/command_navigation"/>
+
+        <!-- planner selection parameter -->
+        <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+
+        <!-- move_base parameters -->
+        <rosparam file="$(find collisions_launch)/ros/config/collisions_dwa/move_base_params.yaml" command="load" />
+        <rosparam file="$(find collisions_launch)/ros/config/common/robot_footprint.yaml" command="load" />
+
+        <!-- local planner parameters (Dynamic Window Approach) -->
+        <rosparam file="$(find collisions_launch)/ros/config/collisions_dwa/dwa_local_planner_params.yaml" command="load" ns="DWAPlannerROS" />
+
+        <!-- global costmap parameters -->
+        <rosparam file="$(find collisions_launch)/ros/config/common/robot_footprint.yaml" command="load" ns="global_costmap"/>
+        <rosparam file="$(find collisions_launch)/ros/config/collisions_dwa/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+        <rosparam file="$(find collisions_launch)/ros/config/collisions_dwa/global_costmap_params.yaml" command="load" />
+
+        <!-- local costmap parameters -->
+        <rosparam file="$(find collisions_launch)/ros/config/common/robot_footprint.yaml" command="load" ns="local_costmap"/>
+        <rosparam file="$(find collisions_launch)/ros/config/collisions_dwa/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find collisions_launch)/ros/config/collisions_dwa/local_costmap_params.yaml" command="load" />
+
+        <!-- recovery behavior parameters-->
+        <rosparam file="$(find collisions_launch)/ros/config/recovery_behaviors/force_field_parameters.yaml" command="load" ns="force_field_recovery"/>
+        <rosparam file="$(find collisions_launch)/ros/config/recovery_behaviors/clear_costmap_parameters.yaml" command="load" ns="clear_costmap_recovery"/>
+    </node>
+
+</launch>

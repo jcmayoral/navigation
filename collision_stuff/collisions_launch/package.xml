@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>collisions_nav_launch_files</name>
+  <name>collisions_launch</name>
   <version>1.0.0</version>
   <description> B-it-bots navigations launch files enhanced with collision detection and recovery skills </description>
 

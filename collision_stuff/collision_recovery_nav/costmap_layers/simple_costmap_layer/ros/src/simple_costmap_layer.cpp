@@ -1,11 +1,11 @@
 #include<simple_costmap_layer/simple_costmap_layer.hpp>
 #include <pluginlib/class_list_macros.h>
 
-PLUGINLIB_EXPORT_CLASS(simple_layer_namespace::SimpleLayer, costmap_2d::Layer)
+PLUGINLIB_EXPORT_CLASS(simple_costmap_layer::SimpleLayer, costmap_2d::Layer)
 
 using costmap_2d::LETHAL_OBSTACLE;
 
-namespace simple_layer_namespace
+namespace simple_costmap_layer
 {
 
 SimpleLayer::SimpleLayer() {}
