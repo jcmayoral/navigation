@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package>
+  <name>simple_costmap_layer</name>
+  <version>1.0.0</version>
+  <description> Costmap Layers useful for collision recovery approaches </description>
+
+  <maintainer email="jocamaba1989@gmail.com">Jose Mayoral</maintainer>
+
+  <license>GPLv3</license>
+
+  <author email="jocamaba1989@gmail.com"> Jose Mayoral </author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>actionlib</run_depend>
+  <run_depend>amcl</run_depend>
+  <run_depend>map_server</run_depend>
+  <run_depend>mcr_default_env_config</run_depend>
+  <run_depend>mcr_navigation_tools</run_depend>
+  <run_depend>move_base</run_depend>
+  <run_depend>move_base_msgs</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>std_srvs</run_depend>
+  <run_depend>topic_tools</run_depend>
+
+  <test_depend>roslaunch</test_depend>
+
+  <export>
+    <costmap_2d plugin="${prefix}/costmap_plugins.xml" />
+  </export>
+
+</package>
