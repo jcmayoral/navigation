@@ -1,5 +1,5 @@
-<library path="lib/libsimple_layer">
-  <class name="simple_costmap_layer::SimpleLayer" type="simple_costmap_layer::SimpleLayer" base_class_type="costmap_2d::Layer">
+<library path="lib/libsimple_costmap">
+  <class type="simple_costmap_layer::SimpleLayer" base_class_type="costmap_2d::Layer">
     <description>Tutorial CostMap</description>
   </class>
 </library>
