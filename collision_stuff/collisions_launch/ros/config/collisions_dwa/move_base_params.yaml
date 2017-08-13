@@ -13,6 +13,8 @@ recovery_behaviors:
     type: 'force_field_recovery/ForceFieldRecovery'
   - name: 'clear_costmap_recovery'
     type: 'clear_costmap_recovery/ClearCostmapRecovery'
+  - name: 'simple_recovery_behavior'
+    type: 'simple_recovery_behavior/SimpleRecoveryBehavior'
 
 base_global_planner: global_planner/GlobalPlanner
 

@@ -3,7 +3,6 @@ project(simple_costmap_layer)
 
 find_package(catkin REQUIRED
         COMPONENTS
-            cmake_modules
             dynamic_reconfigure
             roscpp
             costmap_2d

@@ -1,0 +1,7 @@
+<library path="lib/libsimple_recovery_behavior">
+  <class name="simple_recovery_behavior/SimpleRecoveryBehavior" type="simple_recovery_behavior::SimpleRecoveryBehavior" base_class_type="nav_core::RecoveryBehavior">
+    <description>
+      Empty Behavior
+    </description>
+  </class>
+</library>

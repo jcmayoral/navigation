@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package>
+  <name>simple_recovery_behavior</name>
+  <version>1.0.0</version>
+  <description> Costmap Layers useful for collision recovery approaches </description>
+
+  <maintainer email="jocamaba1989@gmail.com">Jose Mayoral</maintainer>
+
+  <license>GPLv3</license>
+
+  <author email="jocamaba1989@gmail.com"> Jose Mayoral </author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>cmake_modules</build_depend>
+  <build_depend>dynamic_reconfigure</build_depend>
+  <build_depend>nav_core</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>pluginlib</build_depend>
+
+
+  <run_depend>dynamic_reconfigure</run_depend>
+  <run_depend>costmap_2d</run_depend>
+  <run_depend>nav_core</run_depend>
+  <run_depend>pluginlib</run_depend>
+  <run_depend>roscpp</run_depend>
+
+  <export>
+    <nav_core plugin="${prefix}/recovery_plugin.xml" />
+  </export>
+
+</package>
