@@ -17,6 +17,7 @@ find_package(catkin REQUIRED
 
 find_package(Eigen REQUIRED)
 add_definitions(${EIGEN_DEFINITIONS})
+find_library(move_base move_base)
 
 catkin_package(
     CATKIN_DEPENDS
@@ -35,12 +36,12 @@ include_directories(
 # move_base_fault_tolerant
 add_library(move_base_fault_tolerant
   src/move_base_fault_tolerant.cpp
-  ../../default/move_base/src/move_base.cpp
 
 )
 target_link_libraries(move_base_fault_tolerant
     ${Boost_LIBRARIES}
     ${catkin_LIBRARIES}
+    ${move_base}
     )
 add_dependencies(move_base_fault_tolerant move_base_fault_tolerant_gencfg)
 add_dependencies(move_base_fault_tolerant geometry_msgs_gencpp)
