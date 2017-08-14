@@ -5,26 +5,23 @@ find_package(catkin REQUIRED
     COMPONENTS
         cmake_modules
         roscpp
-        move_base
         pluginlib
         actionlib
+        move_base
         dynamic_reconfigure
         message_generation
         move_base_msgs
         nav_core
         tf
 )
+
 find_package(Eigen REQUIRED)
 add_definitions(${EIGEN_DEFINITIONS})
-
-# dynamic reconfigure
-generate_dynamic_reconfigure_options(
-    cfg/MoveBase.cfg
-)
 
 catkin_package(
     CATKIN_DEPENDS
         roscpp
+        tf
         move_base
         dynamic_reconfigure
 )
@@ -35,15 +32,17 @@ include_directories(
     ${EIGEN_INCLUDE_DIRS}
 )
 
-# move_base
+# move_base_fault_tolerant
 add_library(move_base_fault_tolerant
   src/move_base_fault_tolerant.cpp
+  ../../default/move_base/src/move_base.cpp
+
 )
 target_link_libraries(move_base_fault_tolerant
     ${Boost_LIBRARIES}
     ${catkin_LIBRARIES}
     )
-add_dependencies(move_base_fault_tolerant move_base_collisions_gencfg)
+add_dependencies(move_base_fault_tolerant move_base_fault_tolerant_gencfg)
 add_dependencies(move_base_fault_tolerant geometry_msgs_gencpp)
 
 add_executable(move_base_fault_tolerant_node

@@ -35,39 +35,20 @@
 * Author: Eitan Marder-Eppstein
 * Modified by: Jose Mayoral
 *********************************************************************/
-#ifndef NAV_MOVE_BASE_FAULT_TOLERANT_ACTION_H_
-#define NAV_MOVE_BASE_FAULT_TOLERANT_ACTION_H_
+//#ifndef NAV_MOVE_BASE_FAULT_TOLERANT_ACTION_H_
+//#define NAV_MOVE_BASE_FAULT_TOLERANT_ACTION_H_
 
 #include <vector>
 #include <string>
 #include <ros/ros.h>
-
-#include <actionlib/server/simple_action_server.h>
-#include <move_base_msgs/MoveBaseAction.h>
 #include <move_base/move_base.h>
 
-#include <nav_core/base_local_planner.h>
-#include <nav_core/base_global_planner.h>
-#include <nav_core/recovery_behavior.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <costmap_2d/costmap_2d_ros.h>
-#include <costmap_2d/costmap_2d.h>
-#include <nav_msgs/GetPlan.h>
-
-#include <pluginlib/class_loader.h>
-#include <std_srvs/Empty.h>
-
-#include <dynamic_reconfigure/server.h>
-#include "move_base_fault_tolerant/MoveBaseConfig.h"
-
-using namespace move_base;
-
-namespace move_base_fault_tolerant {
+//namespace move_base_fault_tolerant {
   /**
    * @class FaultTolerantMoveBase
    * @brief A class that uses the actionlib::ActionServer interface that moves the robot base to a goal location.
    */
-  class FaultTolerantMoveBase : public MoveBase {
+  class FaultTolerantMoveBase: public move_base::MoveBase{
     public:
       /**
        * @brief  Constructor for the actions
@@ -79,7 +60,6 @@ namespace move_base_fault_tolerant {
        * @brief  Destructor - Cleans up
        */
       virtual ~FaultTolerantMoveBase();
-
   };
-};
-#endif
+//};
+//#endif

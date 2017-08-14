@@ -37,17 +37,11 @@
 * Modified by: Jose Mayoral
 *********************************************************************/
 #include <move_base_fault_tolerant/move_base_fault_tolerant.h>
-#include <cmath>
+#include <move_base/move_base.h>
 
-#include <boost/algorithm/string.hpp>
-#include <boost/thread.hpp>
+//namespace move_base_fault_tolerant {
 
-#include <geometry_msgs/Twist.h>
-
-namespace move_base_fault_tolerant {
-
-  FaultTolerantMoveBase::FaultTolerantMoveBase(tf::TransformListener& tf) : MoveBase(&tf) {
-
+  FaultTolerantMoveBase::FaultTolerantMoveBase(tf::TransformListener& tf): MoveBase(tf) {
 
     }
 
@@ -55,4 +49,4 @@ namespace move_base_fault_tolerant {
 
       }
 
-};
+//};

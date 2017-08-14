@@ -29,16 +29,15 @@
 
 #include <move_base_fault_tolerant/move_base_fault_tolerant.h>
 
-using namespace move_base_fault_tolerant;
-
 int main(int argc, char** argv){
   ros::init(argc, argv, "move_base_fault_tolerant_node");
   tf::TransformListener tf(ros::Duration(10));
 
-  FaultTolerantMoveBase move_base( tf );
+  FaultTolerantMoveBase move_base_fault_tolerant_( tf );
 
   //ros::MultiThreadedSpinner s;
   ros::spin();
 
   return(0);
+
 }
