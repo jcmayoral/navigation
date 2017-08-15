@@ -1,0 +1,7 @@
+<library path="lib/libsimple_collision_detector">
+  <class name="simple_collision_detector/SimpleCollisionDetector" type="simple_collision_detector::SimpleCollisionDetector" base_class_type="fault_core::FaultDetector">
+    <description>
+      A simple planner that seeks to place a legal carrot in-front of the robot
+    </description>
+  </class>
+</library>

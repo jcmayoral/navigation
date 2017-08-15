@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(simple_recovery_behavior)
+project(simple_collision_detector)
 
 find_package(catkin REQUIRED
         COMPONENTS
         dynamic_reconfigure
         roscpp
         pluginlib
-        nav_core
+        fault_core
         )
 
 include_directories(ros/include
@@ -20,25 +20,25 @@ catkin_package(
         dynamic_reconfigure
         roscpp
         pluginlib
-        nav_core
+        fault_core
 )
 
-add_library(simple_recovery_behavior ros/src/simple_recovery_behavior.cpp)
-target_link_libraries(simple_recovery_behavior ${catkin_LIBRARIES})
+add_library(simple_collision_detector ros/src/simple_collision_detector.cpp)
+target_link_libraries(simple_collision_detector ${catkin_LIBRARIES})
 
 ### INSTALLS
-install(TARGETS simple_recovery_behavior
+install(TARGETS simple_collision_detector
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
 
-install(FILES recovery_plugin.xml
+install(FILES fault_plugin.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
 install(DIRECTORY ros/include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  FILES_MATCHING PATTERN "*.hpp"
+  FILES_MATCHING PATTERN "*.h"
 )
 
 install(DIRECTORY ros/config
