@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(simple_collision_detector)
+project(simple_collision_recovery)
 
 find_package(catkin REQUIRED
         COMPONENTS
@@ -15,7 +15,7 @@ include_directories(ros/include
 catkin_package(
     INCLUDE_DIRS
       ros/include
-    LIBRARIES simple_collision_detector
+    LIBRARIES simple_collision_recovery
     CATKIN_DEPENDS
         dynamic_reconfigure
         roscpp
@@ -23,11 +23,11 @@ catkin_package(
         fault_core
 )
 
-add_library(simple_collision_detector ros/src/simple_collision_detector.cpp)
-target_link_libraries(simple_collision_detector ${catkin_LIBRARIES})
+add_library(simple_collision_recovery ros/src/simple_collision_recovery.cpp)
+target_link_libraries(simple_collision_recovery ${catkin_LIBRARIES})
 
 ### INSTALLS
-install(TARGETS simple_collision_detector
+install(TARGETS simple_collision_recovery
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )

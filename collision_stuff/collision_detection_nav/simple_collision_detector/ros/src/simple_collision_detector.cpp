@@ -1,7 +1,7 @@
 #include "simple_collision_detector/simple_collision_detector.h"
 #include <pluginlib/class_list_macros.h>
 
-// register this class as a recovery behavior plugin
+// register this class as a Fault Detector
 PLUGINLIB_DECLARE_CLASS(simple_collision_detector, SimpleCollisionDetector,
                         simple_collision_detector::SimpleCollisionDetector,
                         fault_core::FaultDetector)
@@ -33,4 +33,4 @@ namespace simple_collision_detector
   {
   }
 
-}  // namespace simple_recovery_behavor
+}  // namespace simple_collision_detector

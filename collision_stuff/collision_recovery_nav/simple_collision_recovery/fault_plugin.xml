@@ -1,0 +1,7 @@
+<library path="lib/libsimple_collision_recovery">
+  <class name="simple_collision_recovery/SimpleCollisionRecovery" type="simple_collision_recovery::SimpleCollisionRecovery" base_class_type="fault_core::FaultRecoveryBehavior">
+    <description>
+      A simple collision recovery behavior
+    </description>
+  </class>
+</library>
