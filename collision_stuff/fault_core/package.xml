@@ -1,0 +1,27 @@
+<package>
+    <name>fault_core</name>
+    <version>0.0.1</version>
+    <description>
+
+        This package provides common interfaces for collision detection and recovery navigation specific robot actions. Currently, this package provides the FaultDetector FaultRecoveryBehavior interfaces, which can be used to build actions that can easily swap their fault detectior or fault recovery actions for new versions adhering to the same interface. The package is an extension of the nav_core package provided in the move_base navigation stack
+    </description>
+    <author>Jose Mayoral</author>
+    <author>jocamaba1989@gmail.com</author>
+    <maintainer email="jocamaba1989@gmail.com">Jose Mayoral</maintainer>
+    <license>BSD</license>
+    <url>http://wiki.ros.org/nav_core</url>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <build_depend>std_msgs</build_depend>
+    <build_depend>geometry_msgs</build_depend>
+    <build_depend>costmap_2d</build_depend>
+    <build_depend>tf</build_depend>
+
+    <run_depend>std_msgs</run_depend>
+    <run_depend>geometry_msgs</run_depend>
+    <run_depend>costmap_2d</run_depend>
+    <run_depend>tf</run_depend>
+</package>
+
+

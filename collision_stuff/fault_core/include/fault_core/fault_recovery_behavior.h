@@ -2,7 +2,7 @@
 *
 * Software License Agreement (BSD License)
 *
-*  Copyright (c) 2008, Willow Garage, Inc.
+*  Copyright (c) 2009, Willow Garage, Inc.
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
 *     copyright notice, this list of conditions and the following
 *     disclaimer in the documentation and/or other materials provided
 *     with the distribution.
-*   * Neither the name of the Willow Garage nor the names of its
+*   * Neither the name of Willow Garage, Inc. nor the names of its
 *     contributors may be used to endorse or promote products derived
 *     from this software without specific prior written permission.
 *
@@ -28,26 +28,45 @@
 *  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
 *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-*  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN(
+*  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
 *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 *
-* Author: Eitan Marder-Eppstein
-*         Mike Phillips (put the planner in its own thread)
-* Modified by: Jose Mayoral
+* Author: Eitan Marder-Eppstein (nav_core)
+* Modifications: Jose Mayoral
 *********************************************************************/
-#include <move_base_fault_tolerant/move_base_fault_tolerant.h>
-#include <move_base/move_base.h>
+#ifndef FAULT_RECOVERY_BEHAVIOR_H_
+#define FAULT_RECOVERY_BEHAVIOR_H_
+#include <costmap_2d/costmap_2d_ros.h>
+#include <tf/transform_listener.h>
 
-namespace move_base {
+namespace fault_core {
+  /**
+   * @class FaultRecoveryBehavior
+   * @brief Provides an interface for fault recovery behaviors used in navigation. All fault recovery behaviors written as plugins for the navigation stack must adhere to this interface.
+   */
+  class FaultRecoveryBehavior{
+    public:
+      /**
+       * @brief  Initialization function for the RecoveryBehavior
+       * @param tf A pointer to a transform listener
+       * @param global_costmap A pointer to the global_costmap used by the navigation stack 
+       * @param local_costmap A pointer to the local_costmap used by the navigation stack 
+       */
+      virtual void initialize(std::string name, tf::TransformListener* tf, costmap_2d::Costmap2DROS* global_costmap, costmap_2d::Costmap2DROS* local_costmap) = 0;
 
-  FaultTolerantMoveBase::FaultTolerantMoveBase(tf::TransformListener& tf): MoveBase(tf) {
-    ROS_INFO("FaultTolerantMoveBase Initialized");
+      /**
+       * @brief   Runs the RecoveryBehavior
+       */
+      virtual void runFaultBehavior() = 0;
 
-    }
+      /**
+       * @brief  Virtual destructor for the interface
+       */
+      virtual ~FaultRecoveryBehavior(){}
 
-  FaultTolerantMoveBase::~FaultTolerantMoveBase(){
-
-      }
-
+    protected:
+      FaultRecoveryBehavior(){}
+  };
 };
+#endif
