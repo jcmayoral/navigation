@@ -27,3 +27,9 @@ GlobalPlanner:
     use_quadratic: True             # default : True
     use_grid_path: False            # default : False
     old_navfn_behavior: False       # default : False
+
+fault_detector: simple_collision_detector/SimpleCollisionDetector
+
+fault_collision_recovery_behaviors:
+  - name: 'simple_collision_detector'
+    type: 'simple_collision_recovery/SimpleCollisionRecovery'
