@@ -35,15 +35,15 @@
 * Author: Eitan Marder-Eppstein
 * Modified by: Jose Mayoral
 *********************************************************************/
-//#ifndef NAV_MOVE_BASE_FAULT_TOLERANT_ACTION_H_
-//#define NAV_MOVE_BASE_FAULT_TOLERANT_ACTION_H_
+#ifndef NAV_FAULT_TOLERANT_MOVE_BASE_ACTION_H_
+#define NAV_FAULT_TOLERANT_MOVE_BASE_ACTION_H_
 
 #include <vector>
 #include <string>
 #include <ros/ros.h>
 #include <move_base/move_base.h>
 
-//namespace move_base_fault_tolerant {
+namespace move_base {
   /**
    * @class FaultTolerantMoveBase
    * @brief A class that uses the actionlib::ActionServer interface that moves the robot base to a goal location.
@@ -119,6 +119,11 @@
         recovery_index_ = 0;
     }
 
+
+    /*
+    * THIS IS ACTUALLY A STATE machine
+    * Review notes of the state machine to decide how to modify
+    */
     //the move_base state machine, handles the control logic for navigation
     switch(state_){
       //if we are in a planning state, then we'll attempt to make a plan
@@ -259,7 +264,6 @@
 
   class FaultTolerantMoveBase: public move_base::MoveBase{
 
-
     public:
       /**
        * @brief  Constructor for the actions
@@ -272,5 +276,5 @@
        */
       virtual ~FaultTolerantMoveBase();
   };
-//};
-//#endif
+};
+#endif

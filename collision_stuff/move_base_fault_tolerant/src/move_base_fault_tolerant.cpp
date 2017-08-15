@@ -39,7 +39,7 @@
 #include <move_base_fault_tolerant/move_base_fault_tolerant.h>
 #include <move_base/move_base.h>
 
-//namespace move_base_fault_tolerant {
+namespace move_base {
 
   FaultTolerantMoveBase::FaultTolerantMoveBase(tf::TransformListener& tf): MoveBase(tf) {
 
@@ -49,4 +49,4 @@
 
       }
 
-//};
+};
