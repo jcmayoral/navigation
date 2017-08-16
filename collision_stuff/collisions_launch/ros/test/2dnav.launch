@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+
+ <!--test test-name="collision_launch" pkg="move_base_fault_tolerant" type="move_base_fault_tolerant"
+        name="move_base_test"/-->
+
+ <node pkg="move_base_fault_tolerant" type="move_base_fault_node" name="collision_launch_test" output="screen">
+    <param name="robot" type="string" value="cob3-1" />
+    <param name="robot_env" type="string" value="brsu-c069" />
+    <param name="robot_env" type="string" value="dwa_collisions" />
+ </node>
+
+
+</launch>
