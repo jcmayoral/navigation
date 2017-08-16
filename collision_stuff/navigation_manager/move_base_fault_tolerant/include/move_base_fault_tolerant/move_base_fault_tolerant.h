@@ -28,26 +28,50 @@
 *  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
 *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-*  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN(
+*  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
 *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 *
 * Author: Eitan Marder-Eppstein
-*         Mike Phillips (put the planner in its own thread)
 * Modified by: Jose Mayoral
 *********************************************************************/
-#include <move_base_fault_tolerant/move_base_fault_tolerant.h>
+#ifndef NAV_FAULT_TOLERANT_MOVE_BASE_ACTION_H_
+#define NAV_FAULT_TOLERANT_MOVE_BASE_ACTION_H_
+
+#include <vector>
+#include <string>
+#include <ros/ros.h>
 #include <move_base/move_base.h>
 
 namespace move_base {
+  /**
+   * @class FaultTolerantMoveBase
+   * @brief A class that uses the actionlib::ActionServer interface that moves the robot base to a goal location.
+   */
 
-  FaultTolerantMoveBase::FaultTolerantMoveBase(tf::TransformListener& tf): MoveBase(tf) {
-    ROS_INFO("FaultTolerantMoveBase Initialized");
+   class FaultTolerantMoveBase: public move_base::MoveBase{
 
-    }
+     public:
+       bool executeCycle(geometry_msgs::PoseStamped& goal, std::vector<geometry_msgs::PoseStamped>& global_plan);
+      /**
+       * @brief  Constructor for the actions
+       * @param name The name of the action
+       * @param tf A reference to a TransformListener
+       */
+       FaultTolerantMoveBase(tf::TransformListener& tf);
+      /**
+       * @brief  Destructor - Cleans up
+       */
+      virtual ~FaultTolerantMoveBase();
 
-  FaultTolerantMoveBase::~FaultTolerantMoveBase(){
 
-      }
+      /**
+       * @brief  Do Planning Machine State
+       */
 
+     private:
+       bool detectFault();
+
+  };
 };
+#endif

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(move_base_fault_tolerant)
+project(move_base)
 
 find_package(catkin REQUIRED
     COMPONENTS
@@ -7,23 +7,25 @@ find_package(catkin REQUIRED
         roscpp
         pluginlib
         actionlib
-        move_base
         dynamic_reconfigure
         message_generation
         move_base_msgs
         nav_core
         tf
 )
-
 find_package(Eigen REQUIRED)
 add_definitions(${EIGEN_DEFINITIONS})
-find_library(move_base move_base)
+
+# dynamic reconfigure
+generate_dynamic_reconfigure_options(
+    cfg/MoveBase.cfg
+)
 
 catkin_package(
+    INCLUDE_DIRS
+        include
     CATKIN_DEPENDS
         roscpp
-        tf
-        move_base
         dynamic_reconfigure
 )
 
@@ -33,24 +35,22 @@ include_directories(
     ${EIGEN_INCLUDE_DIRS}
 )
 
-# move_base_fault_tolerant
-add_library(move_base_fault_tolerant
-  src/move_base_fault_tolerant.cpp
-
+# move_base
+add_library(move_base
+  src/move_base.cpp
 )
-target_link_libraries(move_base_fault_tolerant
+target_link_libraries(move_base
     ${Boost_LIBRARIES}
     ${catkin_LIBRARIES}
-    ${move_base}
     )
-add_dependencies(move_base_fault_tolerant move_base_fault_tolerant_gencfg)
-add_dependencies(move_base_fault_tolerant geometry_msgs_gencpp)
+add_dependencies(move_base move_base_gencfg)
+add_dependencies(move_base geometry_msgs_gencpp)
 
-add_executable(move_base_fault_tolerant_node
-  src/move_base_fault_tolerant_node.cpp
+add_executable(move_base_node
+  src/move_base_node.cpp
 )
-target_link_libraries(move_base_fault_tolerant_node move_base_fault_tolerant)
-set_target_properties(move_base_fault_tolerant_node PROPERTIES OUTPUT_NAME move_base_fault_tolerant)
+target_link_libraries(move_base_node move_base)
+set_target_properties(move_base_node PROPERTIES OUTPUT_NAME move_base)
 
 install(DIRECTORY launch
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
@@ -58,9 +58,17 @@ install(DIRECTORY launch
     )
 
 install(
+    PROGRAMS
+       scripts/subtopic_forwarder.py
+       scripts/subtopic_forwarder_node.py
+       scripts/warner.py
+    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(
     TARGETS
-        move_base_fault_tolerant
-        move_base_fault_tolerant_node
+        move_base
+        move_base_node
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
