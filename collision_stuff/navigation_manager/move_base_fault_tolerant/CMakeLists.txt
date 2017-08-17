@@ -17,7 +17,7 @@ find_package(catkin REQUIRED
 
 find_package(Eigen REQUIRED)
 add_definitions(${EIGEN_DEFINITIONS})
-#find_library(move_base move_base)
+find_library(move_base move_base)
 
 catkin_package(
     CATKIN_DEPENDS

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 1.8.3)
 project(collisions_launch)
 
 find_package(catkin REQUIRED rostest COMPONENTS)
@@ -7,7 +7,7 @@ catkin_package()
 
 ### TESTS
 if(CATKIN_ENABLE_TESTING)
-  add_rostest(ros/test/2dnav.launch)
+  add_rostest(ros/test/2dnav_test.launch)
 endif()
 
 ### INSTALLS

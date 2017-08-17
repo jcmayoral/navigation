@@ -11,9 +11,17 @@
   <author email="olima_84@yahoo.com">Oscar Lima</author>
 
   <buildtool_depend>catkin</buildtool_depend>
-
+  <run_depend>simple_costmap_layer</run_depend>
+  <run_depend>simple_recovery_behavior</run_depend>
+  <run_depend>simple_collision_detector</run_depend>
+  <run_depend>simple_collision_recovery</run_depend>
+  <run_depend>collisions_launch</run_depend>
+  <run_depend>fault_core</run_depend>
+  <run_depend>move_base</run_depend>
+  <run_depend>move_base_fault_tolerant</run_depend>
+  
   <export>
-  <metapackage/>
+    <metapackage/>
   </export>
 
 </package>
