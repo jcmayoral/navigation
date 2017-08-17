@@ -18,7 +18,14 @@ namespace move_base {
         RECOVERING
       };
 
+      enum RecoveryTrigger {
+        PLANNING_R,
+        CONTROLLING_R,
+        OSCILLATION_R
+      };
+
     States state_;
+    RecoveryTrigger recovery_trigger_;
   };
 };
 

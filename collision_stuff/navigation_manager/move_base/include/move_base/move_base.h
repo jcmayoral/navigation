@@ -71,13 +71,6 @@ namespace move_base {
    */
   class MoveBase {
     public:
-
-      enum RecoveryTrigger {
-        PLANNING_R,
-        CONTROLLING_R,
-        OSCILLATION_R
-      };
-
       /**
        * @brief  Publishes a velocity command of zero to the base
        */
@@ -126,12 +119,12 @@ namespace move_base {
       /**
       * @brief  Set RecoveryTrigger
       */
-      void setRecoveryTrigger(RecoveryTrigger r);
+      void setRecoveryTrigger(MoveBaseState::RecoveryTrigger r);
 
       /**
       * @brief  Get RecoveryTrigger
       */
-      RecoveryTrigger getRecoveryTrigger();
+      MoveBaseState::RecoveryTrigger getRecoveryTrigger();
 
       /**
       * @brief  Set RecoveryIndex
@@ -345,7 +338,6 @@ namespace move_base {
       double oscillation_timeout_, oscillation_distance_;
 
       MoveBaseState state_;
-      RecoveryTrigger recovery_trigger_;
 
       ros::Time last_valid_plan_, last_valid_control_, last_oscillation_reset_;
       geometry_msgs::PoseStamped oscillation_pose_;
