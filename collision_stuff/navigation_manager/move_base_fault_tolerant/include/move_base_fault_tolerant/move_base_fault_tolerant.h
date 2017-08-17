@@ -42,6 +42,7 @@
 #include <string>
 #include <ros/ros.h>
 #include <move_base/move_base.h>
+#include <move_base/move_base_states.h>
 #include <fault_core/fault_detector.h>
 
 namespace move_base {
@@ -53,6 +54,19 @@ namespace move_base {
    class FaultTolerantMoveBase: public move_base::MoveBase{
 
      public:
+       enum MoveBaseState {
+         PLANNING,
+         CONTROLLING,
+         CLEARING
+       };
+       /**
+        * @brief  Performs a control cycle
+        * @param goal A reference to the goal to pursue
+        * @param global_plan A reference to the global plan being used
+        * @return True if processing of the goal is done, false otherwise
+        * @Override from MoveBase
+        */
+
        bool executeCycle(geometry_msgs::PoseStamped& goal, std::vector<geometry_msgs::PoseStamped>& global_plan);
       /**
        * @brief  Constructor for the actions

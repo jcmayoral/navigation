@@ -59,6 +59,8 @@
 #include <dynamic_reconfigure/server.h>
 #include "move_base/MoveBaseConfig.h"
 
+#include "move_base/move_base_states.h"
+
 namespace move_base {
   //typedefs to help us out with the action server so that we don't hace to type so much
   typedef actionlib::SimpleActionServer<move_base_msgs::MoveBaseAction> MoveBaseActionServer;
@@ -69,12 +71,6 @@ namespace move_base {
    */
   class MoveBase {
     public:
-
-      enum MoveBaseState {
-        PLANNING,
-        CONTROLLING,
-        CLEARING
-      };
 
       enum RecoveryTrigger {
         PLANNING_R,
@@ -110,12 +106,12 @@ namespace move_base {
        /**
        * @brief  Set State
        */
-      void setState(MoveBaseState s);
+       void setState(MoveBaseState::States s);
 
        /**
        * @brief  Get State
        */
-      MoveBaseState getState();
+      MoveBaseState::States getState();
 
       /**
       * @brief  Set runPlanner_

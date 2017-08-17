@@ -46,12 +46,12 @@
 namespace move_base {
 
   //For Inheritance
-  void MoveBase::setState(MoveBaseState s){
-    state_ = s;
+  void MoveBase::setState(MoveBaseState::States s){
+    state_.state_ = s;
   }
 
-  MoveBase::MoveBaseState MoveBase::getState(){
-    return state_;
+  MoveBaseState::States MoveBase::getState(){
+    return state_.state_;
   }
 
   void MoveBase::setRunPlanner(bool b){
@@ -347,7 +347,7 @@ namespace move_base {
     }
 
     //initially, we'll need to make a plan
-    state_ = PLANNING;
+    state_.state_ = MoveBaseState::PLANNING;
 
     //we'll start executing recovery behaviors at the beginning of our list
     recovery_index_ = 0;
@@ -804,13 +804,13 @@ namespace move_base {
 
         //make sure we only start the controller if we still haven't reached the goal
         if(runPlanner_)
-          state_ = CONTROLLING;
+          state_.state_ = MoveBaseState::CONTROLLING;
         if(planner_frequency_ <= 0)
           runPlanner_ = false;
         lock.unlock();
       }
       //if we didn't get a plan and we are in the planning state (the robot isn't moving)
-      else if(state_==PLANNING){
+      else if(state_.state_== MoveBaseState::PLANNING){
         ROS_DEBUG_NAMED("move_base_plan_thread","No Plan...");
         ros::Time attempt_end = last_valid_plan_ + ros::Duration(planner_patience_);
 
@@ -821,7 +821,7 @@ namespace move_base {
         if(runPlanner_ &&
            (ros::Time::now() > attempt_end || ++planning_retries_ > uint32_t(max_planning_retries_))){
           //we'll move into our obstacle clearing mode
-          state_ = CLEARING;
+          state_.state_ = MoveBaseState::CLEARING;
           publishZeroVelocity();
           recovery_trigger_ = PLANNING_R;
         }
@@ -898,7 +898,7 @@ namespace move_base {
 
           //we'll make sure that we reset our state for the next execution cycle
           recovery_index_ = 0;
-          state_ = PLANNING;
+          state_.state_ = MoveBaseState::PLANNING;
 
           //we have a new goal so make sure the planner is awake
           lock.lock();
@@ -936,7 +936,7 @@ namespace move_base {
 
         //we want to go back to the planning state for the next execution cycle
         recovery_index_ = 0;
-        state_ = PLANNING;
+        state_.state_ = MoveBaseState::PLANNING;
 
         //we have a new goal so make sure the planner is awake
         lock.lock();
@@ -973,7 +973,7 @@ namespace move_base {
 
       r.sleep();
       //make sure to sleep for the remainder of our cycle time
-      if(r.cycleTime() > ros::Duration(1 / controller_frequency_) && state_ == CONTROLLING)
+      if(r.cycleTime() > ros::Duration(1 / controller_frequency_) && state_.state_ == MoveBaseState::CONTROLLING)
         ROS_WARN("Control loop missed its desired rate of %.4fHz... the loop actually took %.4f seconds", controller_frequency_, r.cycleTime().toSec());
     }
 
@@ -1063,9 +1063,9 @@ namespace move_base {
     }
 
     //the move_base state machine, handles the control logic for navigation
-    switch(state_){
+    switch(state_.state_){
       //if we are in a planning state, then we'll attempt to make a plan
-      case PLANNING:
+      case MoveBaseState::PLANNING:
         {
           boost::mutex::scoped_lock lock(planner_mutex_);
           runPlanner_ = true;
@@ -1075,7 +1075,7 @@ namespace move_base {
         break;
 
       //if we're controlling, we'll attempt to find valid velocity commands
-      case CONTROLLING:
+      case MoveBaseState::CONTROLLING:
         ROS_DEBUG_NAMED("move_base","In controlling state.");
 
         //check to see if we've reached our goal
@@ -1097,7 +1097,7 @@ namespace move_base {
             last_oscillation_reset_ + ros::Duration(oscillation_timeout_) < ros::Time::now())
         {
           publishZeroVelocity();
-          state_ = CLEARING;
+          state_.state_ = MoveBaseState::CLEARING;
           recovery_trigger_ = OSCILLATION_R;
         }
 
@@ -1121,14 +1121,14 @@ namespace move_base {
           if(ros::Time::now() > attempt_end){
             //we'll move into our obstacle clearing mode
             publishZeroVelocity();
-            state_ = CLEARING;
+            state_.state_ = MoveBaseState::CLEARING;
             recovery_trigger_ = CONTROLLING_R;
           }
           else{
             //otherwise, if we can't find a valid control, we'll go back to planning
             last_valid_plan_ = ros::Time::now();
             planning_retries_ = 0;
-            state_ = PLANNING;
+            state_.state_ = MoveBaseState::PLANNING;
             publishZeroVelocity();
 
             //enable the planner thread in case it isn't running on a clock
@@ -1143,7 +1143,7 @@ namespace move_base {
         break;
 
       //we'll try to clear out space with any user-provided recovery behaviors
-      case CLEARING:
+      case MoveBaseState::CLEARING:
         ROS_DEBUG_NAMED("move_base","In clearing/recovery state");
         //we'll invoke whatever recovery behavior we're currently on if they're enabled
         if(recovery_behavior_enabled_ && recovery_index_ < recovery_behaviors_.size()){
@@ -1155,7 +1155,7 @@ namespace move_base {
 
           //we'll check if the recovery behavior actually worked
           ROS_DEBUG_NAMED("move_base_recovery","Going back to planning state");
-          state_ = PLANNING;
+          state_.state_ = MoveBaseState::PLANNING;
 
           //update the index of the next recovery behavior that we'll try
           recovery_index_++;
@@ -1328,7 +1328,7 @@ namespace move_base {
     lock.unlock();
 
     // Reset statemachine
-    state_ = PLANNING;
+    state_.state_ = MoveBaseState::PLANNING;
     recovery_index_ = 0;
     recovery_trigger_ = PLANNING_R;
     publishZeroVelocity();

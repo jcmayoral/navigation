@@ -50,6 +50,7 @@ namespace move_base {
     private_nh.param("fault_detector", fault_detector_, std::string("simple_collision_detector/SimpleCollisionDetector"));
     ROS_INFO_STREAM ("Selected Fault Detector: " << fault_detector_);
     createFaultDetector();
+    setState(move_base::MoveBaseState::RECOVERING);
     ROS_INFO("FaultTolerantMoveBase Initialized");
 
   }
@@ -209,7 +210,7 @@ namespace move_base {
             getTime(2) + ros::Duration(getOscillationTimeout()) < ros::Time::now())
         {
           publishZeroVelocity();
-          setState(CLEARING);
+          setState(move_base::MoveBaseState::CLEARING);
           setRecoveryTrigger(OSCILLATION_R);
         }
 
@@ -235,7 +236,7 @@ namespace move_base {
           if(ros::Time::now() > attempt_end){
             //we'll move into our obstacle clearing mode
             publishZeroVelocity();
-            setState(CLEARING);
+            setState(move_base::MoveBaseState::CLEARING);
             setRecoveryTrigger(CONTROLLING_R);
           }
           else{
@@ -243,7 +244,7 @@ namespace move_base {
             //last_valid_plan_ = ros::Time::now();
             setTime(ros::Time::now(), 0);
             planning_retries_ = 0;
-            setState(PLANNING);
+            setState(move_base::MoveBaseState::PLANNING);
             publishZeroVelocity();
 
             //enable the planner thread in case it isn't running on a clock
@@ -271,7 +272,7 @@ namespace move_base {
 
           //we'll check if the recovery behavior actually worked
           ROS_DEBUG_NAMED("move_base_recovery","Going back to planning state");
-          setState(PLANNING);
+          setState(move_base::MoveBaseState::PLANNING);
 
           //update the index of the next recovery behavior that we'll try
           setRecoveryIndex(1,true);
