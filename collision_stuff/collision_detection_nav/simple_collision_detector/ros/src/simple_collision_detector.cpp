@@ -21,10 +21,7 @@ namespace simple_collision_detector
   }
 
 
-  void SimpleCollisionDetector::initialize(std::string name,
-    tf::TransformListener* tfListener,
-    costmap_2d::Costmap2DROS* globalCostmapROS,
-    costmap_2d::Costmap2DROS* localCostmapROS)
+  void SimpleCollisionDetector::initialize(std::string name)
   {
 
   }

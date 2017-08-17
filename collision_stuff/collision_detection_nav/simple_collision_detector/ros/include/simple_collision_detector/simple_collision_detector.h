@@ -29,9 +29,7 @@ namespace simple_collision_detector
        * @param globalCostmapROS: ptr to the global costmap of the node
        * @param localCostmapROS: ptr to the local costmap of the node
        */
-      void initialize(std::string name, tf::TransformListener* tfListener,
-        costmap_2d::Costmap2DROS* globalCostmapROS,
-        costmap_2d::Costmap2DROS* localCostmapROS);
+      void initialize(std::string name);
 
       /**
        * @brief Executes the car maneuver recovery behavior

@@ -12,6 +12,7 @@ find_package(catkin REQUIRED
         message_generation
         move_base_msgs
         nav_core
+        fault_core
         tf
 )
 
@@ -24,6 +25,7 @@ catkin_package(
         roscpp
         tf
         move_base
+        fault_core
         dynamic_reconfigure
 )
 

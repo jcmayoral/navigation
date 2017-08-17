@@ -69,6 +69,7 @@ namespace move_base {
    */
   class MoveBase {
     public:
+
       enum MoveBaseState {
         PLANNING,
         CONTROLLING,
@@ -239,7 +240,6 @@ namespace move_base {
       * @brief  Get recovery_behavior_enabled
       */
       bool isRecoveryBehaviorEnabled();
-
 
     protected:
 

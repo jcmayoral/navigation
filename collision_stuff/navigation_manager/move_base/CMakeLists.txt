@@ -15,7 +15,6 @@ find_package(catkin REQUIRED
 )
 find_package(Eigen REQUIRED)
 add_definitions(${EIGEN_DEFINITIONS})
-
 # dynamic reconfigure
 generate_dynamic_reconfigure_options(
     cfg/MoveBase.cfg

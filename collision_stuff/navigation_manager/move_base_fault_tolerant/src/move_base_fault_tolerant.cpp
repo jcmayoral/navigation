@@ -6,8 +6,8 @@
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
-*  modification, are permitted provided that the following conditions
 *  are met:
+*  modification, are permitted provided that the following conditions
 *
 *   * Redistributions of source code must retain the above copyright
 *     notice, this list of conditions and the following disclaimer.
@@ -34,15 +34,52 @@
 *
 * Author: Eitan Marder-Eppstein
 *         Mike Phillips (put the planner in its own thread)
-* Modified by: Jose Mayoral
+*         Jose Mayoral (fault tolerant extension)
 *********************************************************************/
 #include <move_base_fault_tolerant/move_base_fault_tolerant.h>
 #include <move_base/move_base.h>
 
 namespace move_base {
 
-  FaultTolerantMoveBase::FaultTolerantMoveBase(tf::TransformListener& tf): MoveBase(tf) {
+  FaultTolerantMoveBase::FaultTolerantMoveBase(tf::TransformListener& tf):
+    MoveBase(tf),
+    fd_loader_("fault_core", "fault_core::FaultDetector"){
+
+    ros::NodeHandle private_nh("~");
+    ros::NodeHandle nh;
+    private_nh.param("fault_detector", fault_detector_, std::string("simple_collision_detector/SimpleCollisionDetector"));
+    ROS_INFO_STREAM ("Selected Fault Detector: " << fault_detector_);
+    createFaultDetector();
     ROS_INFO("FaultTolerantMoveBase Initialized");
+
+  }
+
+//Based on Global and Local Planner instantiations
+  void FaultTolerantMoveBase::createFaultDetector(){
+    //create a FaultDetector
+    try {
+      //check if a non fully qualified name has potentially been passed in
+      if(!fd_loader_.isClassAvailable(fault_detector_)){
+        std::vector<std::string> classes = fd_loader_.getDeclaredClasses();
+        for(unsigned int i = 0; i < classes.size(); ++i){
+          if(fault_detector_ == fd_loader_.getName(classes[i])){
+            //if we've found a match... we'll get the fully qualified name and break out of the loop
+            ROS_WARN("Fault Detector specifications should now include the package name. You are using a deprecated API. Please switch from %s to %s in your yaml file.",
+                fault_detector_.c_str(), classes[i].c_str());
+            fault_detector_ = classes[i];
+            break;
+          }
+        }
+      }
+
+      fd_ = fd_loader_.createInstance(fault_detector_);
+      ROS_INFO("Created fault_detector_ %s", fault_detector_.c_str());
+      fd_->initialize(fd_loader_.getName(fault_detector_));
+    } catch (const pluginlib::PluginlibException& ex)
+    {
+      ROS_FATAL("Failed to create the %s detector, are you sure it is properly registered and that the containing library is built? Exception: %s", fault_detector_.c_str(), ex.what());
+      exit(1);
+    }
 
   }
 

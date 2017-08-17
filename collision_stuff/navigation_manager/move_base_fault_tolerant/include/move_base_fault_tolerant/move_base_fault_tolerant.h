@@ -42,6 +42,7 @@
 #include <string>
 #include <ros/ros.h>
 #include <move_base/move_base.h>
+#include <fault_core/fault_detector.h>
 
 namespace move_base {
   /**
@@ -70,7 +71,15 @@ namespace move_base {
        */
 
      private:
+
+       //Containers
+       std::string fault_detector_;
+
+       //FaultDetector
+       pluginlib::ClassLoader<fault_core::FaultDetector> fd_loader_;
+       boost::shared_ptr<fault_core::FaultDetector> fd_;
        bool detectFault();
+       void createFaultDetector();
 
   };
 };
