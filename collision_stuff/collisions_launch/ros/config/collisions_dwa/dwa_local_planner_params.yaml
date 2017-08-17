@@ -49,3 +49,8 @@ rot_stopped_vel: 0.01               # default : 0.01
 trans_stopped_vel: 0.01             # default : 0.01
 
 penalize_negative_x: true           # default : false
+
+publish_cost_grid_pc: true
+publish_traj_pc: true
+odom_topic: 'odom_combined'
+global_frame_id: 'map'
