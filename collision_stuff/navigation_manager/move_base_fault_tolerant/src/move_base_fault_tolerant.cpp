@@ -94,15 +94,12 @@ namespace move_base {
     boost::unique_lock<boost::mutex> lock(detection_mutex_);
     int counter = 0;
     while(n.ok()){
-      ROS_DEBUG("detect Fault Thread");
-      fd_->detectFault();
-      if (counter == 100)
+      if (fd_->detectFault())
       {
         setState(move_base::MoveBaseState::RECOVERING);
-        counter = 0;
       }
       else{
-        counter++;
+        ROS_DEBUG("Healthy State");
       }
     }
     lock.unlock();
