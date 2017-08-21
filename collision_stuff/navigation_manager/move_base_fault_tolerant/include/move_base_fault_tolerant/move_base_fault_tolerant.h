@@ -92,8 +92,11 @@ namespace move_base {
        //FaultDetector
        pluginlib::ClassLoader<fault_core::FaultDetector> fd_loader_;
        boost::shared_ptr<fault_core::FaultDetector> fd_;
-       bool detectFault();
+       void detectFault();
        void createFaultDetector();
+       boost::thread* detection_thread_;
+       // For detection thread
+       boost::mutex detection_mutex_;
 
   };
 };

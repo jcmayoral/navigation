@@ -50,6 +50,7 @@ namespace move_base {
     private_nh.param("fault_detector", fault_detector_, std::string("simple_collision_detector/SimpleCollisionDetector"));
     ROS_INFO_STREAM ("Selected Fault Detector: " << fault_detector_);
     createFaultDetector();
+    detection_thread_ = new boost::thread(boost::bind(&FaultTolerantMoveBase::detectFault, this));
     ROS_INFO("FaultTolerantMoveBase Initialized");
 
   }
@@ -84,12 +85,19 @@ namespace move_base {
   }
 
   FaultTolerantMoveBase::~FaultTolerantMoveBase(){
-
+    detection_thread_->interrupt();
+    detection_thread_->join();
+    delete detection_thread_;
   }
 
-
-  bool FaultTolerantMoveBase::detectFault(){
-    return true;
+  void FaultTolerantMoveBase::detectFault(){
+    ros::NodeHandle n;
+    boost::unique_lock<boost::mutex> lock(detection_mutex_);
+    while(n.ok()){
+      ROS_INFO("detect Fault Thread");
+      fd_->detectFault();
+    }
+    lock.unlock();
   }
 
   bool FaultTolerantMoveBase::executeCycle(geometry_msgs::PoseStamped& goal, std::vector<geometry_msgs::PoseStamped>& global_plan){
@@ -188,7 +196,7 @@ namespace move_base {
         ROS_DEBUG_NAMED("move_base","In controlling state.");
 
         //FAULT DETECTION
-        FaultTolerantMoveBase::detectFault();
+        //FaultTolerantMoveBase::detectFault();
 
         //check to see if we've reached our goal
         if(tc_->isGoalReached()){
