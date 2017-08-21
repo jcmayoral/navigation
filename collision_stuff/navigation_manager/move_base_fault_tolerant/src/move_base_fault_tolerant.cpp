@@ -76,7 +76,8 @@ namespace move_base_fault_tolerant {
 
       fd_ = fd_loader_.createInstance(fault_detector_);
       ROS_INFO("Created fault_detector_ %s", fault_detector_.c_str());
-      fd_->initialize(fd_loader_.getName(fault_detector_));
+      //fd_->initialize(fd_loader_.getName(fault_detector_));
+      fd_->initialize(5);
     } catch (const pluginlib::PluginlibException& ex)
     {
       ROS_FATAL("Failed to create the %s detector, are you sure it is properly registered and that the containing library is built? Exception: %s", fault_detector_.c_str(), ex.what());

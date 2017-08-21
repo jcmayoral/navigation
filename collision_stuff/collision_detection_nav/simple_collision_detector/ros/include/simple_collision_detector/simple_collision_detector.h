@@ -2,8 +2,10 @@
 #define SIMPLE_COLLISION_DETECTOR_H
 
 #include <ros/ros.h>
+#include <string>
 #include <fault_core/fault_detector.h>
 #include <base_local_planner/costmap_model.h>
+#include <std_msgs/Float32.h>
 
 namespace simple_collision_detector
 {
@@ -24,12 +26,9 @@ namespace simple_collision_detector
 
       /**
        * @brief Initializes plugin
-       * @param name: name of instance
-       * @param tfListener: ptr to the tf transform listener of the node
-       * @param globalCostmapROS: ptr to the global costmap of the node
-       * @param localCostmapROS: ptr to the local costmap of the node
+       * @param number of sensors
        */
-      void initialize(std::string name);
+      void initialize(int sensor_number);
 
       /**
        * @brief Executes the detection of teh fault
@@ -41,7 +40,10 @@ namespace simple_collision_detector
        */
       void diagnoseFault();
 
+      void mainCallBack(std_msgs::Float32 msg);
 
+    private:
+      std::vector<ros::Subscriber> array_subcribers_;
   };
 
 }  // namespace simple_collision_detector

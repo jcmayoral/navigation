@@ -54,7 +54,7 @@ namespace fault_core {
        * @param global_costmap A pointer to the global_costmap used by the navigation stack
        * @param local_costmap A pointer to the local_costmap used by the navigation stack
        */
-      virtual void initialize(std::string name) = 0;
+      virtual void initialize(int sensor_number) = 0;
 
       /**
        * @brief   detect Fault

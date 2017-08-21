@@ -30,6 +30,9 @@ GlobalPlanner:
 
 fault_detector: simple_collision_detector/SimpleCollisionDetector
 
+sensor_fusion:
+    sensor_number: 4
+
 fault_collision_recovery_behaviors:
   - name: 'simple_collision_detector'
     type: 'simple_collision_recovery/SimpleCollisionRecovery'
