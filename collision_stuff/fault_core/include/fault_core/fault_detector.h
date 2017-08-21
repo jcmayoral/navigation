@@ -51,14 +51,14 @@ namespace fault_core {
        * @brief  Initialization function for the RecoveryBehavior
        * @param tf A pointer to a transform listener
        * @param global_costmap A pointer to the global_costmap used by the navigation stack
-       * @param local_costmap A pointer to the local_costmap used by the navigation stack 
+       * @param local_costmap A pointer to the local_costmap used by the navigation stack
        */
       virtual void initialize(std::string name) = 0;
 
       /**
        * @brief   Runs the RecoveryBehavior
        */
-      virtual void detectFault() = 0;
+      virtual bool detectFault() = 0;
 
       /**
        * @brief  Virtual destructor for the interface

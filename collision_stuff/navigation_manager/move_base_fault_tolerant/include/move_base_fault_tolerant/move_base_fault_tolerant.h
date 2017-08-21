@@ -54,11 +54,6 @@ namespace move_base {
    class FaultTolerantMoveBase: public move_base::MoveBase{
 
      public:
-       enum MoveBaseState {
-         PLANNING,
-         CONTROLLING,
-         CLEARING
-       };
        /**
         * @brief  Performs a control cycle
         * @param goal A reference to the goal to pursue
@@ -67,7 +62,7 @@ namespace move_base {
         * @Override from MoveBase
         */
 
-       bool executeCycle(geometry_msgs::PoseStamped& goal, std::vector<geometry_msgs::PoseStamped>& global_plan);
+      virtual bool executeCycle(geometry_msgs::PoseStamped& goal, std::vector<geometry_msgs::PoseStamped>& global_plan);
       /**
        * @brief  Constructor for the actions
        * @param name The name of the action
@@ -79,9 +74,9 @@ namespace move_base {
        */
       virtual ~FaultTolerantMoveBase();
 
-
       /**
        * @brief  Do Planning Machine State
+
        */
 
      private:
@@ -93,6 +88,7 @@ namespace move_base {
        pluginlib::ClassLoader<fault_core::FaultDetector> fd_loader_;
        boost::shared_ptr<fault_core::FaultDetector> fd_;
        void detectFault();
+       void recoveryFault();
        void createFaultDetector();
        boost::thread* detection_thread_;
        // For detection thread

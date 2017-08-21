@@ -42,9 +42,8 @@
 namespace move_base {
 
   FaultTolerantMoveBase::FaultTolerantMoveBase(tf::TransformListener& tf):
-    MoveBase(tf),
-    fd_loader_("fault_core", "fault_core::FaultDetector"){
-
+    MoveBase(tf),fd_loader_("fault_core", "fault_core::FaultDetector")
+    {
     ros::NodeHandle private_nh("~");
     ros::NodeHandle nh;
     private_nh.param("fault_detector", fault_detector_, std::string("simple_collision_detector/SimpleCollisionDetector"));
@@ -93,14 +92,28 @@ namespace move_base {
   void FaultTolerantMoveBase::detectFault(){
     ros::NodeHandle n;
     boost::unique_lock<boost::mutex> lock(detection_mutex_);
+    int counter = 0;
     while(n.ok()){
-      ROS_INFO("detect Fault Thread");
+      ROS_DEBUG("detect Fault Thread");
       fd_->detectFault();
+      if (counter == 100)
+      {
+        setState(move_base::MoveBaseState::RECOVERING);
+        counter = 0;
+      }
+      else{
+        counter++;
+      }
     }
     lock.unlock();
   }
 
+  void FaultTolerantMoveBase::recoveryFault(){
+    ROS_INFO("recoveryFault");
+  }
+
   bool FaultTolerantMoveBase::executeCycle(geometry_msgs::PoseStamped& goal, std::vector<geometry_msgs::PoseStamped>& global_plan){
+    ROS_INFO("fault executeCycle");
     boost::recursive_mutex::scoped_lock ecl(configuration_mutex_);
     //we need to be able to publish velocity commands
     geometry_msgs::Twist cmd_vel;
@@ -180,6 +193,7 @@ namespace move_base {
     * Review notes of the state machine to decide how to modify
     */
     //the move_base state machine, handles the control logic for navigation
+    ROS_INFO_STREAM("State " << getState());
     switch(getState()){
       //if we are in a planning state, then we'll attempt to make a plan
       case move_base::MoveBaseState::PLANNING:
@@ -197,6 +211,7 @@ namespace move_base {
 
         //FAULT DETECTION
         //FaultTolerantMoveBase::detectFault();
+        ROS_INFO_STREAM("State " << getState());
 
         //check to see if we've reached our goal
         if(tc_->isGoalReached()){
@@ -308,6 +323,12 @@ namespace move_base {
           resetState();
           return true;
         }
+        break;
+
+      case move_base::MoveBaseState::RECOVERING:
+        ROS_INFO("State RECOVERING");
+        FaultTolerantMoveBase::recoveryFault();
+        setState(move_base::MoveBaseState::CONTROLLING);
         break;
       default:
         ROS_ERROR("This case should never be reached, something is wrong, aborting");

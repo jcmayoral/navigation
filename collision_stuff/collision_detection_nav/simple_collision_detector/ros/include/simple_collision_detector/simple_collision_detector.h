@@ -34,7 +34,7 @@ namespace simple_collision_detector
       /**
        * @brief Executes the car maneuver recovery behavior
        */
-      void detectFault();
+      bool detectFault();
 
   };
 

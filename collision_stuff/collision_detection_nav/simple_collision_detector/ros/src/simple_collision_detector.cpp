@@ -26,9 +26,10 @@ namespace simple_collision_detector
 
   }
 
-  void SimpleCollisionDetector::detectFault()
+  bool SimpleCollisionDetector::detectFault()
   {
-    ROS_INFO("SimpleCollisionDetector Detect Fault");
+    ROS_DEBUG("SimpleCollisionDetector Detect Fault");
+    return false;
   }
 
 }  // namespace simple_collision_detector
