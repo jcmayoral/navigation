@@ -33,7 +33,7 @@ int main(int argc, char** argv){
   ros::init(argc, argv, "move_base_fault_tolerant_node");
   tf::TransformListener tf(ros::Duration(10));
 
-  move_base::FaultTolerantMoveBase move_base_fault_tolerant_( tf );
+  move_base_fault_tolerant::FaultTolerantMoveBase move_base_fault_tolerant_( tf );
 
   //ros::MultiThreadedSpinner s;
   ros::spin();

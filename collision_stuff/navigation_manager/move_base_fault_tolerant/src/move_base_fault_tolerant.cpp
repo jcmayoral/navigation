@@ -39,7 +39,9 @@
 #include <move_base_fault_tolerant/move_base_fault_tolerant.h>
 #include <move_base/move_base.h>
 
-namespace move_base {
+using namespace move_base;
+
+namespace move_base_fault_tolerant {
 
   FaultTolerantMoveBase::FaultTolerantMoveBase(tf::TransformListener& tf):
     MoveBase(tf),fd_loader_("fault_core", "fault_core::FaultDetector")
@@ -96,7 +98,7 @@ namespace move_base {
     while(n.ok()){
       if (fd_->detectFault())
       {
-        setState(move_base::MoveBaseState::RECOVERING);
+        setState(MoveBaseState::RECOVERING);
       }
       else{
         ROS_DEBUG("Healthy State");
@@ -135,7 +137,7 @@ namespace move_base {
       //oscillation_pose_ = current_position;
       setOscillationPose(current_position);
       //if our last recovery was caused by oscillation, we want to reset the recovery index
-      if(getRecoveryTrigger() == move_base::MoveBaseState::OSCILLATION_R)
+      if(getRecoveryTrigger() == MoveBaseState::OSCILLATION_R)
         setRecoveryIndex(0);
     }
 
@@ -181,7 +183,7 @@ namespace move_base {
       }
 
       //make sure to reset recovery_index_ since we were able to find a valid plan
-      if(getRecoveryTrigger() == move_base::MoveBaseState::PLANNING_R)
+      if(getRecoveryTrigger() == MoveBaseState::PLANNING_R)
         setRecoveryIndex(0);
     }
 
@@ -193,7 +195,7 @@ namespace move_base {
     ROS_INFO_STREAM("State " << getState());
     switch(getState()){
       //if we are in a planning state, then we'll attempt to make a plan
-      case move_base::MoveBaseState::PLANNING:
+      case MoveBaseState::PLANNING:
         {
           boost::mutex::scoped_lock lock(planner_mutex_);
           setRunPlanner(true);
@@ -203,7 +205,7 @@ namespace move_base {
         break;
 
       //if we're controlling, we'll attempt to find valid velocity commands
-      case move_base::MoveBaseState::CONTROLLING:
+      case MoveBaseState::CONTROLLING:
         ROS_DEBUG_NAMED("move_base","In controlling state.");
 
         //FAULT DETECTION
@@ -229,8 +231,8 @@ namespace move_base {
             getTime(2) + ros::Duration(getOscillationTimeout()) < ros::Time::now())
         {
           publishZeroVelocity();
-          setState(move_base::MoveBaseState::CLEARING);
-          setRecoveryTrigger(move_base::MoveBaseState::OSCILLATION_R);
+          setState(MoveBaseState::CLEARING);
+          setRecoveryTrigger(MoveBaseState::OSCILLATION_R);
         }
 
         {
@@ -243,7 +245,7 @@ namespace move_base {
           setTime(ros::Time::now(),1);
           //make sure that we send the velocity command to the base
           vel_pub_.publish(cmd_vel);
-          if(getRecoveryTrigger() == move_base::MoveBaseState::CONTROLLING_R)
+          if(getRecoveryTrigger() == MoveBaseState::CONTROLLING_R)
             setRecoveryIndex(0);
         }
         else {
@@ -255,7 +257,7 @@ namespace move_base {
           if(ros::Time::now() > attempt_end){
             //we'll move into our obstacle clearing mode
             publishZeroVelocity();
-            setState(move_base::MoveBaseState::CLEARING);
+            setState(MoveBaseState::CLEARING);
             setRecoveryTrigger(move_base::MoveBaseState::CONTROLLING_R);
           }
           else{
@@ -263,7 +265,7 @@ namespace move_base {
             //last_valid_plan_ = ros::Time::now();
             setTime(ros::Time::now(), 0);
             planning_retries_ = 0;
-            setState(move_base::MoveBaseState::PLANNING);
+            setState(MoveBaseState::PLANNING);
             publishZeroVelocity();
 
             //enable the planner thread in case it isn't running on a clock
@@ -278,7 +280,7 @@ namespace move_base {
         break;
 
       //we'll try to clear out space with any user-provided recovery behaviors
-      case move_base::MoveBaseState::CLEARING:
+      case MoveBaseState::CLEARING:
         ROS_DEBUG_NAMED("move_base","In clearing/recovery state");
         //we'll invoke whatever recovery behavior we're currently on if they're enabled
         if(isRecoveryBehaviorEnabled() && getRecoveryIndex() < recovery_behaviors_.size()){
@@ -291,7 +293,7 @@ namespace move_base {
 
           //we'll check if the recovery behavior actually worked
           ROS_DEBUG_NAMED("move_base_recovery","Going back to planning state");
-          setState(move_base::MoveBaseState::PLANNING);
+          setState(MoveBaseState::PLANNING);
 
           //update the index of the next recovery behavior that we'll try
           setRecoveryIndex(1,true);
@@ -305,15 +307,15 @@ namespace move_base {
 
           ROS_DEBUG_NAMED("move_base_recovery","Something should abort after this.");
 
-          if(getRecoveryTrigger() == move_base::MoveBaseState::CONTROLLING_R){
+          if(getRecoveryTrigger() == MoveBaseState::CONTROLLING_R){
             ROS_ERROR("Aborting because a valid control could not be found. Even after executing all recovery behaviors");
             as_->setAborted(move_base_msgs::MoveBaseResult(), "Failed to find a valid control. Even after executing recovery behaviors.");
           }
-          else if(getRecoveryTrigger() == move_base::MoveBaseState::PLANNING_R){
+          else if(getRecoveryTrigger() == MoveBaseState::PLANNING_R){
             ROS_ERROR("Aborting because a valid plan could not be found. Even after executing all recovery behaviors");
             as_->setAborted(move_base_msgs::MoveBaseResult(), "Failed to find a valid plan. Even after executing recovery behaviors.");
           }
-          else if(getRecoveryTrigger() == move_base::MoveBaseState::OSCILLATION_R){
+          else if(getRecoveryTrigger() == MoveBaseState::OSCILLATION_R){
             ROS_ERROR("Aborting because the robot appears to be oscillating over and over. Even after executing all recovery behaviors");
             as_->setAborted(move_base_msgs::MoveBaseResult(), "Robot is oscillating. Even after executing recovery behaviors.");
           }
@@ -322,10 +324,10 @@ namespace move_base {
         }
         break;
 
-      case move_base::MoveBaseState::RECOVERING:
+      case MoveBaseState::RECOVERING:
         ROS_INFO("State RECOVERING");
         FaultTolerantMoveBase::recoveryFault();
-        setState(move_base::MoveBaseState::CONTROLLING);
+        setState(MoveBaseState::CONTROLLING);
         break;
       default:
         ROS_ERROR("This case should never be reached, something is wrong, aborting");

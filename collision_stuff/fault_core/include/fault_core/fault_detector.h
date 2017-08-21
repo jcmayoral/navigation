@@ -57,9 +57,14 @@ namespace fault_core {
       virtual void initialize(std::string name) = 0;
 
       /**
-       * @brief   Runs the RecoveryBehavior
+       * @brief   detect Fault
        */
       virtual bool detectFault() = 0;
+
+      /**
+       * @brief   diagnose Fault
+       */
+      virtual void diagnoseFault() = 0;
 
       /**
        * @brief  Virtual destructor for the interface
@@ -68,7 +73,6 @@ namespace fault_core {
 
     protected:
       FaultTopology fault_;
-      FaultDetector(){}
   };
 };
 #endif

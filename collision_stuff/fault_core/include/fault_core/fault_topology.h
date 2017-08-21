@@ -5,13 +5,10 @@
 #include <geometry_msgs/Quaternion.h>
 
 namespace fault_core {
-
   class FaultTopology {
     public:
-
       enum FaultType {
-        MINOR_COLLISION,
-        MAJOR_COLLISION,
+        COLLISION,
         SENSORFAULT,
         UNKNOWN_TYPE
       };
@@ -22,11 +19,10 @@ namespace fault_core {
         MAP_UNACCURACY,
         UNKNOWN
       };
-
     FaultType type_;
     FaultCause cause_;
     geometry_msgs::Quaternion orientation_;
-    double strength;
+    double strength_;
   };
 };
 

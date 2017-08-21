@@ -32,9 +32,15 @@ namespace simple_collision_detector
       void initialize(std::string name);
 
       /**
-       * @brief Executes the car maneuver recovery behavior
+       * @brief Executes the detection of teh fault
        */
       bool detectFault();
+
+      /**
+       * @brief   diagnose Fault
+       */
+      void diagnoseFault();
+
 
   };
 

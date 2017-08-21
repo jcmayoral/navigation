@@ -6,11 +6,15 @@ PLUGINLIB_DECLARE_CLASS(simple_collision_detector, SimpleCollisionDetector,
                         simple_collision_detector::SimpleCollisionDetector,
                         fault_core::FaultDetector)
 
+using namespace fault_core;
+
 namespace simple_collision_detector
 {
 
   SimpleCollisionDetector::SimpleCollisionDetector()
   {
+    fault_.type_ =  fault_core::FaultTopology::UNKNOWN_TYPE;
+    fault_.cause_ = fault_core::FaultTopology::UNKNOWN;
     ROS_INFO("Constructor SimpleCollisionDetector");
   }
 
@@ -29,7 +33,12 @@ namespace simple_collision_detector
   bool SimpleCollisionDetector::detectFault()
   {
     ROS_DEBUG("SimpleCollisionDetector Detect Fault");
+    diagnoseFault();
     return false;
   }
 
+  void SimpleCollisionDetector::diagnoseFault(){
+    fault_.cause_ = FaultTopology::UNKNOWN;
+    fault_.type_ = FaultTopology::COLLISION;
+  }
 }  // namespace simple_collision_detector

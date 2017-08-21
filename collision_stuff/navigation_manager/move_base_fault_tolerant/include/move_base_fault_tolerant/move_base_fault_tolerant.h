@@ -45,13 +45,15 @@
 #include <move_base/move_base_states.h>
 #include <fault_core/fault_detector.h>
 
-namespace move_base {
+
+using namespace move_base;
+namespace move_base_fault_tolerant {
   /**
    * @class FaultTolerantMoveBase
    * @brief A class that uses the actionlib::ActionServer interface that moves the robot base to a goal location.
    */
 
-   class FaultTolerantMoveBase: public move_base::MoveBase{
+   class FaultTolerantMoveBase: public MoveBase{
 
      public:
        /**
