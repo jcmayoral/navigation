@@ -13,8 +13,8 @@ namespace simple_collision_detector
 
   SimpleCollisionDetector::SimpleCollisionDetector()
   {
-    fault_.type_ =  fault_core::FaultTopology::UNKNOWN_TYPE;
-    fault_.cause_ = fault_core::FaultTopology::UNKNOWN;
+    fault_.type_ =  FaultTopology::UNKNOWN_TYPE;
+    fault_.cause_ = FaultTopology::UNKNOWN;
     ROS_INFO("Constructor SimpleCollisionDetector");
   }
 

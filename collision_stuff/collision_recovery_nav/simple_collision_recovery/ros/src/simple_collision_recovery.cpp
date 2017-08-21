@@ -6,11 +6,13 @@ PLUGINLIB_DECLARE_CLASS(simple_collision_recovery, SimpleCollisionRecovery,
                         simple_collision_recovery::SimpleCollisionRecovery,
                         fault_core::FaultRecoveryBehavior)
 
+using namespace fault_core;
 namespace simple_collision_recovery
 {
 
   SimpleCollisionRecovery::SimpleCollisionRecovery()
   {
+    fault_cause_ = FaultTopology::UNKNOWN;
     ROS_INFO("Constructor SimpleCollisionRecovery");
   }
 

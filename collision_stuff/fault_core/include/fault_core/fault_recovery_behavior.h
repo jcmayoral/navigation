@@ -66,9 +66,15 @@ namespace fault_core {
        */
       virtual ~FaultRecoveryBehavior(){}
 
+      /*
+      * @brief get FaultType
+      */
+      FaultTopology::FaultCause getType(){
+        return fault_cause_;
+      }
+
     protected:
-      FaultTopology::FaultType recovery_type_;
-      FaultRecoveryBehavior(){}
+      FaultTopology::FaultCause fault_cause_;
   };
 };
 #endif
