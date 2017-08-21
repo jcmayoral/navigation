@@ -38,6 +38,7 @@
 #ifndef FAULT_DETECTOR_H_
 #define FAULT_DETECTOR_H_
 #include <costmap_2d/costmap_2d_ros.h>
+#include <fault_core/fault_topology.h>
 #include <tf/transform_listener.h>
 
 namespace fault_core {
@@ -66,6 +67,7 @@ namespace fault_core {
       virtual ~FaultDetector(){}
 
     protected:
+      FaultTopology fault_;
       FaultDetector(){}
   };
 };
