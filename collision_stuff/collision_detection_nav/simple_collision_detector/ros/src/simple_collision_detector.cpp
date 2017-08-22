@@ -32,9 +32,9 @@ namespace simple_collision_detector
   /*void SimpleCollisionDetector::secondCallBack(const sensor_msgs::ImageConstPtr& msg1, const sensor_msgs::ImageConstPtr&  msg2){
     ROS_INFO("secondCallBack");
   }*/
-  void SimpleCollisionDetector::thirdCallBack(const  geometry_msgs::AccelStamped::ConstPtr& msg){
+  /*void SimpleCollisionDetector::thirdCallBack(const  geometry_msgs::AccelStamped::ConstPtr& msg){
     ROS_INFO("third CB");
-  }
+  }*/
 
 
   void SimpleCollisionDetector::initialize(int sensor_number)
