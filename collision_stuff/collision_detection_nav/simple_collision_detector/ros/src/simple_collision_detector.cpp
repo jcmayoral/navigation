@@ -12,7 +12,7 @@ using namespace message_filters;
 namespace simple_collision_detector
 {
 
-  SimpleCollisionDetector::SimpleCollisionDetector()
+  SimpleCollisionDetector::SimpleCollisionDetector(): isCollisionDetected(false)
   {
     fault_.type_ =  FaultTopology::UNKNOWN_TYPE;
     fault_.cause_ = FaultTopology::UNKNOWN;
@@ -27,6 +27,12 @@ namespace simple_collision_detector
 
   void SimpleCollisionDetector::mainCallBack(const fusion_msgs::sensorFusionMsg msg){
     ROS_INFO_STREAM("Message received " << msg.window_size);
+    if (msg.msg == fusion_msgs::sensorFusionMsg::ERROR){
+      isCollisionDetected = true;
+    }
+    else{
+      isCollisionDetected = false;
+    }
   }
 
   /*void SimpleCollisionDetector::secondCallBack(const sensor_msgs::ImageConstPtr& msg1, const sensor_msgs::ImageConstPtr&  msg2){
@@ -68,7 +74,7 @@ namespace simple_collision_detector
   {
     ROS_DEBUG("SimpleCollisionDetector Detect Fault");
     diagnoseFault();
-    return false;
+    return isCollisionDetected;
   }
 
   void SimpleCollisionDetector::diagnoseFault(){

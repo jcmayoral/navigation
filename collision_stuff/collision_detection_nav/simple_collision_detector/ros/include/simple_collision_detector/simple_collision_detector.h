@@ -53,6 +53,7 @@ namespace simple_collision_detector
 
     private:
       std::vector<ros::Subscriber> array_subcribers_;
+      bool isCollisionDetected;
   };
 
 }  // namespace simple_collision_detector
