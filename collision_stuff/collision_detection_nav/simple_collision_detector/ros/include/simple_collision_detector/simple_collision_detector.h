@@ -12,7 +12,7 @@
 #include <std_msgs/Float32.h>
 #include <std_msgs/String.h>
 #include <geometry_msgs/AccelStamped.h>
-
+#include <fusion_msgs/sensorFusionMsg.h>
 
 namespace simple_collision_detector
 {
@@ -47,7 +47,7 @@ namespace simple_collision_detector
        */
       void diagnoseFault();
 
-      void mainCallBack(std_msgs::Float32 msg);
+      void mainCallBack(const fusion_msgs::sensorFusionMsg msg);
       //void secondCallBack(const sensor_msgs::ImageConstPtr& msg1, const sensor_msgs::ImageConstPtr&  msg2);
       //void thirdCallBack(const geometry_msgs::AccelStamped::ConstPtr& msg);
 

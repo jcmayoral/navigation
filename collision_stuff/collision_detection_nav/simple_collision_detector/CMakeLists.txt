@@ -6,6 +6,7 @@ find_package(catkin REQUIRED
         COMPONENTS
         dynamic_reconfigure
         roscpp
+        fusion_msgs
         pluginlib
         fault_core
         )
@@ -20,6 +21,7 @@ catkin_package(
     CATKIN_DEPENDS
         dynamic_reconfigure
         roscpp
+        fusion_msgs
         pluginlib
         fault_core
 )

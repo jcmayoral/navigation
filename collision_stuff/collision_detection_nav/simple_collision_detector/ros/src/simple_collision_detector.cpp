@@ -25,8 +25,8 @@ namespace simple_collision_detector
 
   }
 
-  void SimpleCollisionDetector::mainCallBack(std_msgs::Float32 msg){
-    ROS_INFO_STREAM("Message received " << msg);
+  void SimpleCollisionDetector::mainCallBack(const fusion_msgs::sensorFusionMsg msg){
+    ROS_INFO_STREAM("Message received " << msg.window_size);
   }
 
   /*void SimpleCollisionDetector::secondCallBack(const sensor_msgs::ImageConstPtr& msg1, const sensor_msgs::ImageConstPtr&  msg2){
