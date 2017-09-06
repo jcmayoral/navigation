@@ -757,6 +757,10 @@ namespace move_base {
     return global_pose_msg;
   }
 
+  bool MoveBase::getShutdownCostmap(){
+    return shutdown_costmaps_;
+  }
+
   void MoveBase::wakePlanner(const ros::TimerEvent& event)
   {
     // we have slept long enough for rate

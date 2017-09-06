@@ -109,11 +109,11 @@ namespace move_base_fault_tolerant {
   }
 
   void FaultTolerantMoveBase::recoveryFault(){
-    ROS_INFO("recoveryFault");
+    ROS_DEBUG("recoveryFault");
   }
 
   bool FaultTolerantMoveBase::executeCycle(geometry_msgs::PoseStamped& goal, std::vector<geometry_msgs::PoseStamped>& global_plan){
-    ROS_INFO("fault executeCycle");
+    ROS_DEBUG("fault executeCycle");
     boost::recursive_mutex::scoped_lock ecl(configuration_mutex_);
     //we need to be able to publish velocity commands
     geometry_msgs::Twist cmd_vel;
@@ -193,7 +193,7 @@ namespace move_base_fault_tolerant {
     * Review notes of the state machine to decide how to modify
     */
     //the move_base state machine, handles the control logic for navigation
-    ROS_INFO_STREAM("State " << getState());
+    //ROS_INFO_STREAM("State " << getState());
     switch(getState()){
       //if we are in a planning state, then we'll attempt to make a plan
       case MoveBaseState::PLANNING:
@@ -211,7 +211,7 @@ namespace move_base_fault_tolerant {
 
         //FAULT DETECTION
         //FaultTolerantMoveBase::detectFault();
-        ROS_INFO_STREAM("State " << getState());
+        ROS_DEBUG_STREAM("State " << getState());
 
         //check to see if we've reached our goal
         if(tc_->isGoalReached()){
@@ -326,10 +326,22 @@ namespace move_base_fault_tolerant {
         break;
 
       case MoveBaseState::RECOVERING:
-        ROS_INFO("State RECOVERING");
+      {
+        ROS_ERROR("State RECOVERING");
         FaultTolerantMoveBase::recoveryFault();
-        setState(MoveBaseState::CONTROLLING);
+        //publishZeroVelocity();
+
+        //Disable Planner_thread
+        boost::unique_lock<boost::mutex> lock(planner_mutex_);
+        setRunPlanner(false);
+        lock.unlock();
+
+        as_->setAborted(move_base_msgs::MoveBaseResult(), "Collision Recovery Failure.");
+        resetState();
+        return true;
         break;
+      }
+
       default:
         ROS_ERROR("This case should never be reached, something is wrong, aborting");
         resetState();
@@ -344,5 +356,23 @@ namespace move_base_fault_tolerant {
     //we aren't done yet
     return false;
   }
+  void FaultTolerantMoveBase::resetState(){
+    // Disable the planner thread
+    boost::unique_lock<boost::mutex> lock(planner_mutex_);
+    setRunPlanner(false);
+    lock.unlock();
 
+    // Reset statemachine
+    setState(MoveBaseState::PLANNING);
+    setRecoveryIndex(0);
+    setRecoveryTrigger(MoveBaseState::PLANNING_R);
+    publishZeroVelocity();
+
+    //if we shutdown our costmaps when we're deactivated... we'll do that now
+    if(getShutdownCostmap()){
+      ROS_DEBUG_NAMED("move_base","Stopping costmaps");
+      planner_costmap_ros_->stop();
+      controller_costmap_ros_->stop();
+    }
+  }
 };

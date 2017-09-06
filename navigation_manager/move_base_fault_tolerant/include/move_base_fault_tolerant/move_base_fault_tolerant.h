@@ -65,6 +65,8 @@ namespace move_base_fault_tolerant {
         */
 
       virtual bool executeCycle(geometry_msgs::PoseStamped& goal, std::vector<geometry_msgs::PoseStamped>& global_plan);
+      virtual void resetState();
+
       /**
        * @brief  Constructor for the actions
        * @param name The name of the action

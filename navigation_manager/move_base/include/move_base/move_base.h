@@ -224,18 +224,22 @@ namespace move_base {
       */
       void disableRecoveryBehavior();
 
-
       /**
       * @brief  Get recovery_behavior_enabled
       */
       bool isRecoveryBehaviorEnabled();
+
+      /**
+      * @brief  get shutdown_costmaps
+      */
+      bool getShutdownCostmap();
 
     protected:
 
       /**
        * @brief  Reset the state of the move_base action and send a zero velocity command to the base
        */
-      void resetState();
+      virtual void resetState();
 
       /**
        * @brief  Calculate euclidean Distance between to poses
