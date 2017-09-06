@@ -356,23 +356,4 @@ namespace move_base_fault_tolerant {
     //we aren't done yet
     return false;
   }
-  void FaultTolerantMoveBase::resetState(){
-    // Disable the planner thread
-    boost::unique_lock<boost::mutex> lock(planner_mutex_);
-    setRunPlanner(false);
-    lock.unlock();
-
-    // Reset statemachine
-    setState(MoveBaseState::PLANNING);
-    setRecoveryIndex(0);
-    setRecoveryTrigger(MoveBaseState::PLANNING_R);
-    publishZeroVelocity();
-
-    //if we shutdown our costmaps when we're deactivated... we'll do that now
-    if(getShutdownCostmap()){
-      ROS_DEBUG_NAMED("move_base","Stopping costmaps");
-      planner_costmap_ros_->stop();
-      controller_costmap_ros_->stop();
-    }
-  }
 };

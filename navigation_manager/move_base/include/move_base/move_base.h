@@ -239,7 +239,7 @@ namespace move_base {
       /**
        * @brief  Reset the state of the move_base action and send a zero velocity command to the base
        */
-      virtual void resetState();
+      void resetState();
 
       /**
        * @brief  Calculate euclidean Distance between to poses
