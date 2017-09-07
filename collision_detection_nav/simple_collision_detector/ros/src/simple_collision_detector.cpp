@@ -26,7 +26,7 @@ namespace simple_collision_detector
   }
 
   void SimpleCollisionDetector::mainCallBack(const fusion_msgs::sensorFusionMsg msg){
-    ROS_INFO_STREAM("Message received " << msg.window_size);
+    ROS_DEBUG_STREAM("Message received " << msg.window_size);
     if (msg.msg == fusion_msgs::sensorFusionMsg::ERROR){
       isCollisionDetected = true;
     }
@@ -67,18 +67,18 @@ namespace simple_collision_detector
     */
   }
 
-
-
-
   bool SimpleCollisionDetector::detectFault()
   {
     ROS_DEBUG("SimpleCollisionDetector Detect Fault");
-    diagnoseFault();
+    if (isCollisionDetected){
+      diagnoseFault();
+    }
     return isCollisionDetected;
   }
 
   void SimpleCollisionDetector::diagnoseFault(){
     fault_.cause_ = FaultTopology::UNKNOWN;
     fault_.type_ = FaultTopology::COLLISION;
+    ROS_ERROR_ONCE("Collision FOUND");
   }
 }  // namespace simple_collision_detector
