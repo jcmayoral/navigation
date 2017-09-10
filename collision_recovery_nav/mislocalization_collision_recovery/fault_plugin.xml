@@ -1,0 +1,7 @@
+<library path="lib/libmislocalization_collision_recovery">
+  <class name="mislocalization_collision_recovery/MisLocalizationCollisionRecovery" type="mislocalization_collision_recovery::MisLocalizationCollisionRecovery" base_class_type="fault_core::FaultRecoveryBehavior">
+    <description>
+      A collision recovery behavior which trigger /global_localization service
+    </description>
+  </class>
+</library>
