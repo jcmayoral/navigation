@@ -24,10 +24,7 @@ namespace mislocalization_collision_recovery
 
   }
 
-  void MisLocalizationCollisionRecovery::initialize(std::string name,
-    tf::TransformListener* tfListener,
-    costmap_2d::Costmap2DROS* globalCostmapROS,
-    costmap_2d::Costmap2DROS* localCostmapROS)
+  void MisLocalizationCollisionRecovery::initialize()
   {
 
   }

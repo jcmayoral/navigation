@@ -22,10 +22,7 @@ namespace simple_collision_recovery
 
   }
 
-  void SimpleCollisionRecovery::initialize(std::string name,
-    tf::TransformListener* tfListener,
-    costmap_2d::Costmap2DROS* globalCostmapROS,
-    costmap_2d::Costmap2DROS* localCostmapROS)
+  void SimpleCollisionRecovery::initialize()
   {
 
   }

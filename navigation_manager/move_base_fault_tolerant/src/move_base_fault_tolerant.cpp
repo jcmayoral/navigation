@@ -32,7 +32,7 @@
 *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 *
-* Author: Eitan Marder-Eppstein
+* Author: Eitan Marder-Eppstein""
 *         Mike Phillips (put the planner in its own thread)
 *         Jose Mayoral (fault tolerant extension)
 *********************************************************************/
@@ -44,13 +44,18 @@ using namespace move_base;
 namespace move_base_fault_tolerant {
 
   FaultTolerantMoveBase::FaultTolerantMoveBase(tf::TransformListener& tf):
-    MoveBase(tf),fd_loader_("fault_core", "fault_core::FaultDetector")
+    MoveBase(tf),fd_loader_("fault_core", "fault_core::FaultDetector"), fault_recovery_loader_("fault_core", "fault_core::FaultRecoveryBehavior")
     {
     ros::NodeHandle private_nh("~");
     ros::NodeHandle nh;
     private_nh.param("fault_detector", fault_detector_, std::string("simple_collision_detector/SimpleCollisionDetector"));
     ROS_INFO_STREAM ("Selected Fault Detector: " << fault_detector_);
     createFaultDetector();
+
+    if(!loadFaultRecoveryBehaviors(private_nh)){
+      ROS_WARN("No Fault Recovery Behaviors");
+    }
+
     detection_thread_ = new boost::thread(boost::bind(&FaultTolerantMoveBase::detectFault, this));
     ROS_INFO("FaultTolerantMoveBase Initialized");
 
@@ -110,6 +115,90 @@ namespace move_base_fault_tolerant {
 
   void FaultTolerantMoveBase::recoveryFault(){
     ROS_DEBUG("recoveryFault");
+  }
+
+  bool FaultTolerantMoveBase::loadFaultRecoveryBehaviors(ros::NodeHandle node){
+    XmlRpc::XmlRpcValue behavior_list;
+    if(node.getParam("fault_recovery_behaviors", behavior_list)){
+      if(behavior_list.getType() == XmlRpc::XmlRpcValue::TypeArray){
+        for(int i = 0; i < behavior_list.size(); ++i){
+          if(behavior_list[i].getType() == XmlRpc::XmlRpcValue::TypeStruct){
+            if(behavior_list[i].hasMember("name") && behavior_list[i].hasMember("type")){
+              //check for recovery behaviors with the same name
+              for(int j = i + 1; j < behavior_list.size(); j++){
+                if(behavior_list[j].getType() == XmlRpc::XmlRpcValue::TypeStruct){
+                  if(behavior_list[j].hasMember("name") && behavior_list[j].hasMember("type")){
+                    std::string name_i = behavior_list[i]["name"];
+                    std::string name_j = behavior_list[j]["name"];
+                    if(name_i == name_j){
+                      ROS_ERROR("A recovery behavior with the name %s already exists, this is not allowed. Using the default recovery behaviors instead.",
+                          name_i.c_str());
+                      return false;
+                    }
+                  }
+                }
+              }
+            }
+            else{
+              ROS_ERROR("Recovery behaviors must have a name and a type and this does not. Using the default recovery behaviors instead.");
+              return false;
+            }
+          }
+          else{
+            ROS_ERROR("Recovery behaviors must be specified as maps, but they are XmlRpcType %d. We'll use the default recovery behaviors instead.",
+                behavior_list[i].getType());
+            return false;
+          }
+        }
+
+        //if we've made it to this point, we know that the list is legal so we'll create all the recovery behaviors
+        for(int i = 0; i < behavior_list.size(); ++i){
+          try{
+            //check if a non fully qualified name has potentially been passed in
+            if(!fault_recovery_loader_.isClassAvailable(behavior_list[i]["type"])){
+              std::vector<std::string> classes = fault_recovery_loader_.getDeclaredClasses();
+              for(unsigned int i = 0; i < classes.size(); ++i){
+                if(behavior_list[i]["type"] == fault_recovery_loader_.getName(classes[i])){
+                  //if we've found a match... we'll get the fully qualified name and break out of the loop
+                  ROS_WARN("Recovery behavior specifications should now include the package name. You are using a deprecated API. Please switch from %s to %s in your yaml file.",
+                      std::string(behavior_list[i]["type"]).c_str(), classes[i].c_str());
+                  behavior_list[i]["type"] = classes[i];
+                  break;
+                }
+              }
+            }
+
+            boost::shared_ptr<fault_core::FaultRecoveryBehavior> behavior(fault_recovery_loader_.createInstance(behavior_list[i]["type"]));
+
+            //shouldn't be possible, but it won't hurt to check
+            if(behavior.get() == NULL){
+              ROS_ERROR("The ClassLoader returned a null pointer without throwing an exception. This should not happen");
+              return false;
+            }
+
+            //initialize the recovery behavior with its name
+            behavior->initialize();
+            fault_recovery_behaviors_.push_back(behavior);
+          }
+          catch(pluginlib::PluginlibException& ex){
+            ROS_ERROR("Failed to load a plugin. Using default recovery behaviors. Error: %s", ex.what());
+            return false;
+          }
+        }
+      }
+      else{
+        ROS_ERROR("The recovery behavior specification must be a list, but is of XmlRpcType %d. We'll use the default recovery behaviors instead.",
+            behavior_list.getType());
+        return false;
+      }
+    }
+    else{
+      //if no recovery_behaviors are specified, we'll just load the defaults
+      return false;
+    }
+
+    //if we've made it here... we've constructed a recovery behavior list successfully
+    return true;
   }
 
   bool FaultTolerantMoveBase::executeCycle(geometry_msgs::PoseStamped& goal, std::vector<geometry_msgs::PoseStamped>& global_plan){
@@ -327,15 +416,21 @@ namespace move_base_fault_tolerant {
 
       case MoveBaseState::RECOVERING:
       {
-        ROS_ERROR("State RECOVERING");
-        FaultTolerantMoveBase::recoveryFault();
-        //publishZeroVelocity();
-
+        //Following Clearing State "template"
         //Disable Planner_thread
         boost::unique_lock<boost::mutex> lock(planner_mutex_);
         setRunPlanner(false);
         lock.unlock();
 
+        ROS_ERROR("move_base in state RECOVERING");
+        FaultTolerantMoveBase::recoveryFault();
+        //publishZeroVelocity();
+
+        for (int i = 0; i<fault_recovery_behaviors_.size(); i++){
+          if (fd_->getFault().cause_ == fault_recovery_behaviors_[i]->getType()){
+            fault_recovery_behaviors_[i]->runFaultBehavior();
+          }
+        }
         as_->setAborted(move_base_msgs::MoveBaseResult(), "Collision Recovery Failure.");
         resetState();
         return true;

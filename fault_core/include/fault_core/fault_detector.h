@@ -67,6 +67,11 @@ namespace fault_core {
       virtual void diagnoseFault() = 0;
 
       /**
+       * @brief   getFault
+       */
+      virtual FaultTopology getFault() = 0;
+
+      /**
        * @brief  Virtual destructor for the interface
        */
       virtual ~FaultDetector(){}

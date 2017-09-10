@@ -44,6 +44,7 @@
 #include <move_base/move_base.h>
 #include <move_base/move_base_states.h>
 #include <fault_core/fault_detector.h>
+#include <fault_core/fault_recovery_behavior.h>
 
 
 using namespace move_base;
@@ -93,9 +94,14 @@ namespace move_base_fault_tolerant {
        void detectFault();
        void recoveryFault();
        void createFaultDetector();
+       bool loadFaultRecoveryBehaviors(ros::NodeHandle node);
        boost::thread* detection_thread_;
        // For detection thread
        boost::mutex detection_mutex_;
+
+       //FaultRecoveryBehaviors
+       pluginlib::ClassLoader<fault_core::FaultRecoveryBehavior> fault_recovery_loader_;
+       std::vector<boost::shared_ptr<fault_core::FaultRecoveryBehavior> > fault_recovery_behaviors_;
 
   };
 };

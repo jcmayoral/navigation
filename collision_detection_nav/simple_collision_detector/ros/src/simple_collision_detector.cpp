@@ -24,6 +24,12 @@ namespace simple_collision_detector
   {
 
   }
+  
+  fault_core::FaultTopology SimpleCollisionDetector::getFault()
+  {
+     return fault_;
+  }
+
 
   void SimpleCollisionDetector::mainCallBack(const fusion_msgs::sensorFusionMsg msg){
     ROS_DEBUG_STREAM("Message received " << msg.window_size);

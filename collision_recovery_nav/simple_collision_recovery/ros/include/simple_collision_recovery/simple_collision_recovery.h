@@ -24,14 +24,8 @@ namespace simple_collision_recovery
 
       /**
        * @brief Initializes plugin
-       * @param name: name of instance
-       * @param tfListener: ptr to the tf transform listener of the node
-       * @param globalCostmapROS: ptr to the global costmap of the node
-       * @param localCostmapROS: ptr to the local costmap of the node
        */
-      void initialize(std::string name, tf::TransformListener* tfListener,
-        costmap_2d::Costmap2DROS* globalCostmapROS,
-        costmap_2d::Costmap2DROS* localCostmapROS);
+      void initialize();
 
       /**
        * @brief Executes the car maneuver recovery behavior

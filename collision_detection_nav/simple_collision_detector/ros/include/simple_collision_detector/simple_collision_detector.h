@@ -46,6 +46,11 @@ namespace simple_collision_detector
        * @brief   diagnose Fault
        */
       void diagnoseFault();
+      
+      /**
+       * @brief   detect Fault
+       */
+      fault_core::FaultTopology getFault();
 
       void mainCallBack(const fusion_msgs::sensorFusionMsg msg);
       //void secondCallBack(const sensor_msgs::ImageConstPtr& msg1, const sensor_msgs::ImageConstPtr&  msg2);
