@@ -83,7 +83,7 @@ namespace simple_collision_detector
   }
 
   void SimpleCollisionDetector::diagnoseFault(){
-    fault_.cause_ = FaultTopology::UNKNOWN;
+    fault_.cause_ = FaultTopology::MISLOCALIZATION;
     fault_.type_ = FaultTopology::COLLISION;
     ROS_ERROR_ONCE("Collision FOUND");
   }
