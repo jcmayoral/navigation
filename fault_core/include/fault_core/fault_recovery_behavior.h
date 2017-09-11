@@ -38,6 +38,7 @@
 #ifndef FAULT_RECOVERY_BEHAVIOR_H_
 #define FAULT_RECOVERY_BEHAVIOR_H_
 #include <costmap_2d/costmap_2d_ros.h>
+#include <costmap_2d/costmap_2d.h>
 #include <fault_core/fault_topology.h>
 #include <tf/transform_listener.h>
 
@@ -54,7 +55,7 @@ namespace fault_core {
        * @param global_costmap A pointer to the global_costmap used by the navigation stack
        * @param local_costmap A pointer to the local_costmap used by the navigation stack
        */
-      virtual void initialize() = 0;
+      virtual void initialize(costmap_2d::Costmap2DROS* global_costmap, costmap_2d::Costmap2DROS* local_costmap) = 0;
 
       /**
        * @brief   Runs the RecoveryBehavior

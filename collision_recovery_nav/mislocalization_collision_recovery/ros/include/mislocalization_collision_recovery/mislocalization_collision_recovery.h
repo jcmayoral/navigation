@@ -26,7 +26,7 @@ namespace mislocalization_collision_recovery
       /**
        * @brief Initializes plugin
        */
-      void initialize();
+      void initialize(costmap_2d::Costmap2DROS* global_costmap, costmap_2d::Costmap2DROS* local_costmap);
 
       /**
        * @brief Executes the car maneuver recovery behavior

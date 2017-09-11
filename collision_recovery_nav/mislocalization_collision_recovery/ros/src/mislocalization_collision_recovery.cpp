@@ -24,7 +24,7 @@ namespace mislocalization_collision_recovery
 
   }
 
-  void MisLocalizationCollisionRecovery::initialize()
+  void MisLocalizationCollisionRecovery::initialize(costmap_2d::Costmap2DROS* global_costmap, costmap_2d::Costmap2DROS* local_costmap)
   {
 
   }

@@ -22,7 +22,7 @@ namespace simple_collision_recovery
 
   }
 
-  void SimpleCollisionRecovery::initialize()
+  void SimpleCollisionRecovery::initialize(costmap_2d::Costmap2DROS* global_costmap, costmap_2d::Costmap2DROS* local_costmap)
   {
 
   }

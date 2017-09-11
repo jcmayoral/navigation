@@ -177,7 +177,7 @@ namespace move_base_fault_tolerant {
             }
 
             //initialize the recovery behavior with its name
-            behavior->initialize();
+            behavior->initialize(planner_costmap_ros_, controller_costmap_ros_);
             fault_recovery_behaviors_.push_back(behavior);
           }
           catch(pluginlib::PluginlibException& ex){
