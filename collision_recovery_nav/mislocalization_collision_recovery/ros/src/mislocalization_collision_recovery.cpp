@@ -29,17 +29,20 @@ namespace mislocalization_collision_recovery
 
   }
 
-  void MisLocalizationCollisionRecovery::runFaultBehavior()
+  bool MisLocalizationCollisionRecovery::runFaultBehavior()
   {
     if (ros::service::waitForService ("/global_localization", 100)) {
       std_srvs::Empty s;
       if(!client_.call(s)) {
         ROS_ERROR ("Error calling service");
+	return false;
       }
     }
     else {
       ROS_ERROR ("Could not find service");
+      return false;
     }
+    return true;
   }
 
 }  // namespace MisLocalization_collision_recovery

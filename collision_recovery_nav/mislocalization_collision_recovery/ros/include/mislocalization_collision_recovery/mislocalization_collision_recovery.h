@@ -31,7 +31,7 @@ namespace mislocalization_collision_recovery
       /**
        * @brief Executes the car maneuver recovery behavior
        */
-      void runFaultBehavior();
+      bool runFaultBehavior();
 
     private:
       ros::ServiceClient client_;

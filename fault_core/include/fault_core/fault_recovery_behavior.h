@@ -60,7 +60,7 @@ namespace fault_core {
       /**
        * @brief   Runs the RecoveryBehavior
        */
-      virtual void runFaultBehavior() = 0;
+      virtual bool runFaultBehavior() = 0;
 
       /**
        * @brief  Virtual destructor for the interface

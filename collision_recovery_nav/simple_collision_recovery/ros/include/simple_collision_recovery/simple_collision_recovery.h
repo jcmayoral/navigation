@@ -30,7 +30,7 @@ namespace simple_collision_recovery
       /**
        * @brief Executes the car maneuver recovery behavior
        */
-      void runFaultBehavior();
+      bool runFaultBehavior();
 
   };
 

@@ -27,8 +27,9 @@ namespace simple_collision_recovery
 
   }
 
-  void SimpleCollisionRecovery::runFaultBehavior()
+  bool SimpleCollisionRecovery::runFaultBehavior()
   {
+    return true;
   }
 
 }  // namespace simple_collision_recovery
