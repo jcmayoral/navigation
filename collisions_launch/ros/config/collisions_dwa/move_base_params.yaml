@@ -33,6 +33,8 @@ fault_detector: simple_collision_detector/SimpleCollisionDetector
 sensor_fusion:
     sensor_number: 4
 
-fault_collision_recovery_behaviors:
-  - name: 'simple_collision_detector'
+fault_recovery_behaviors:
+  - name: 'simple_collision_recovery'
     type: 'simple_collision_recovery/SimpleCollisionRecovery'
+  - name: 'mislocalization_collision_recovery'
+    type: 'mislocalization_collision_recovery/MisLocalizationCollisionRecovery'
