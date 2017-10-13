@@ -10,14 +10,24 @@ using namespace fault_core;
 namespace mislocalization_collision_recovery
 {
 
-  MisLocalizationCollisionRecovery::MisLocalizationCollisionRecovery()
+  MisLocalizationCollisionRecovery::MisLocalizationCollisionRecovery(): amcl_pose_(), is_pose_received_(false)
   {
     fault_cause_ = FaultTopology::MISLOCALIZATION;
     ros::NodeHandle n;
-    client_ = n.serviceClient<std_srvs::Empty>("/global_localization");
+    global_client_ = n.serviceClient<std_srvs::Empty>("/global_localization");
+    amcl_client_ = n.serviceClient<std_srvs::Empty>("/request_nomotion_update");
+    clear_costmaps_client_ = n.serviceClient<std_srvs::Empty>("/move_base/clear_costmaps");
+
+    amcl_sub_ = n.subscribe("/amcl_pose", 1, &MisLocalizationCollisionRecovery::amclCB,this);
+
     ROS_INFO("Constructor MisLocalizationCollisionRecovery");
   }
 
+  void MisLocalizationCollisionRecovery::amclCB(const geometry_msgs::PoseWithCovarianceStampedConstPtr& msg){
+    amcl_pose_ = *msg;
+    is_pose_received_ = true;
+
+  }
 
   MisLocalizationCollisionRecovery::~MisLocalizationCollisionRecovery()
   {
@@ -31,16 +41,44 @@ namespace mislocalization_collision_recovery
 
   bool MisLocalizationCollisionRecovery::runFaultBehavior()
   {
-    if (ros::service::waitForService ("/global_localization", 100)) {
-      std_srvs::Empty s;
-      if(!client_.call(s)) {
-        ROS_ERROR ("Error calling service");
-	return false;
+    if (!is_pose_received_){
+      ROS_ERROR("Localization not received");
+      return false;
+    }
+
+    std_srvs::Empty s;
+
+
+    //clear_costmaps
+    if (ros::service::waitForService ("/move_base/clear_costmaps", 100)) {
+      if(!clear_costmaps_client_.call(s)) {
+        ROS_ERROR ("Error clearing costmap service");
+	      return false;
       }
     }
-    else {
-      ROS_ERROR ("Could not find service");
-      return false;
+
+    //reset Localtization
+    if (ros::service::waitForService ("/global_localization", 100)) {
+      if(!global_client_.call(s)) {
+        ROS_ERROR ("Error calling service");
+	      return false;
+      }
+
+      double current_var = 1;
+      //Force update of the particle filter
+      ros::service::waitForService ("/request_nomotion_update", 100);
+
+      while(current_var > 2.0){ //TODO
+        ROS_INFO_STREAM(current_var);
+        if(!amcl_client_.call(s)){
+          ROS_ERROR("Resample Error");
+          return false;
+        }
+        ros::Duration(0.1).sleep();
+        current_var = sqrt(pow(amcl_pose_.pose.covariance[0],2) +
+                           pow(amcl_pose_.pose.covariance[7],2) +
+                           pow(amcl_pose_.pose.covariance[35],2));
+      }
     }
     return true;
   }

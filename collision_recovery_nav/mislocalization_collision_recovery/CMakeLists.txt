@@ -7,6 +7,7 @@ find_package(catkin REQUIRED
         roscpp
         pluginlib
         fault_core
+        geometry_msgs
         std_srvs
         )
 
@@ -22,6 +23,7 @@ catkin_package(
         roscpp
         pluginlib
         fault_core
+        geometry_msgs
         std_srvs
 )
 
