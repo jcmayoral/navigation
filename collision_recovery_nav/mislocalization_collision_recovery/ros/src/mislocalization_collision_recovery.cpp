@@ -64,7 +64,7 @@ namespace mislocalization_collision_recovery
 	      return false;
       }
 
-      double current_var = 1;
+      double current_var = 3.0;
       //Force update of the particle filter
       ros::service::waitForService ("/request_nomotion_update", 100);
 
