@@ -44,6 +44,7 @@ namespace mislocalization_collision_recovery
       ros::ServiceClient amcl_client_;
       ros::ServiceClient clear_costmaps_client_;
       bool is_pose_received_;
+      double threshold_;
 
   };
 

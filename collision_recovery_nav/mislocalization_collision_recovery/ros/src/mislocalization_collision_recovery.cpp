@@ -10,7 +10,7 @@ using namespace fault_core;
 namespace mislocalization_collision_recovery
 {
 
-  MisLocalizationCollisionRecovery::MisLocalizationCollisionRecovery(): amcl_pose_(), is_pose_received_(false)
+  MisLocalizationCollisionRecovery::MisLocalizationCollisionRecovery(): amcl_pose_(), is_pose_received_(false), threshold_(2.0)
   {
     fault_cause_ = FaultTopology::MISLOCALIZATION;
     ros::NodeHandle n;
@@ -20,6 +20,7 @@ namespace mislocalization_collision_recovery
 
     amcl_sub_ = n.subscribe("/amcl_pose", 1, &MisLocalizationCollisionRecovery::amclCB,this);
 
+    n.getParam("/mislocalization_threshold", threshold_);
     ROS_INFO("Constructor MisLocalizationCollisionRecovery");
   }
 
@@ -64,17 +65,18 @@ namespace mislocalization_collision_recovery
 	      return false;
       }
 
-      double current_var = 3.0;
+      double current_var = threshold_ + 1.0;
       //Force update of the particle filter
       ros::service::waitForService ("/request_nomotion_update", 100);
 
-      while(current_var > 2.0){ //TODO
-        ROS_INFO_STREAM(current_var);
+      while(current_var > threshold_){ //TODO
         if(!amcl_client_.call(s)){
           ROS_ERROR("Resample Error");
           return false;
         }
+
         ros::Duration(0.1).sleep();
+
         current_var = sqrt(pow(amcl_pose_.pose.covariance[0],2) +
                            pow(amcl_pose_.pose.covariance[7],2) +
                            pow(amcl_pose_.pose.covariance[35],2));
