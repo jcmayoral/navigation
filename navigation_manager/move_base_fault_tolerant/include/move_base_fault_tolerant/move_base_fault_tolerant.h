@@ -95,6 +95,7 @@ namespace move_base_fault_tolerant {
        void recoveryFault();
        void createFaultDetector();
        bool loadFaultRecoveryBehaviors(ros::NodeHandle node);
+       int sensors_number_;
        boost::thread* detection_thread_;
        // For detection thread
        boost::mutex detection_mutex_;

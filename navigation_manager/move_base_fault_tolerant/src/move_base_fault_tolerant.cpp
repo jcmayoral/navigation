@@ -49,6 +49,7 @@ namespace move_base_fault_tolerant {
     ros::NodeHandle private_nh("~");
     ros::NodeHandle nh;
     private_nh.param("fault_detector", fault_detector_, std::string("simple_collision_detector/SimpleCollisionDetector"));
+    private_nh.param("sensor_fusion/sensor_number", sensors_number_, 1);
     ROS_INFO_STREAM ("Selected Fault Detector: " << fault_detector_);
     createFaultDetector();
 
@@ -82,7 +83,7 @@ namespace move_base_fault_tolerant {
       fd_ = fd_loader_.createInstance(fault_detector_);
       ROS_INFO("Created fault_detector_ %s", fault_detector_.c_str());
       //fd_->initialize(fd_loader_.getName(fault_detector_));
-      fd_->initialize(1);
+      fd_->initialize(sensors_number_);
     } catch (const pluginlib::PluginlibException& ex)
     {
       ROS_FATAL("Failed to create the %s detector, are you sure it is properly registered and that the containing library is built? Exception: %s", fault_detector_.c_str(), ex.what());
@@ -425,7 +426,7 @@ namespace move_base_fault_tolerant {
         ROS_ERROR("move_base in state RECOVERING");
         //FaultTolerantMoveBase::recoveryFault();
         //publishZeroVelocity();
-	
+
 	bool result = true;
 	int i = 0;
 
