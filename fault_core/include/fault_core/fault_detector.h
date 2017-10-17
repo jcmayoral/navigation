@@ -62,6 +62,11 @@ namespace fault_core {
       virtual bool detectFault() = 0;
 
       /**
+       * @brief   detect Fault
+       */
+      virtual void isolateFault() = 0;
+
+      /**
        * @brief   diagnose Fault
        */
       virtual void diagnoseFault() = 0;

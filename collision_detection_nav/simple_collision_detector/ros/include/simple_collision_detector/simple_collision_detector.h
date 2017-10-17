@@ -43,10 +43,15 @@ namespace simple_collision_detector
       bool detectFault();
 
       /**
+       * @brief Executes the detection of teh fault
+       */
+      void isolateFault();
+
+      /**
        * @brief   diagnose Fault
        */
       void diagnoseFault();
-      
+
       /**
        * @brief   detect Fault
        */

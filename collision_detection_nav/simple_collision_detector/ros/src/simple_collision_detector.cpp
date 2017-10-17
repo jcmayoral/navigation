@@ -24,7 +24,7 @@ namespace simple_collision_detector
   {
 
   }
-  
+
   fault_core::FaultTopology SimpleCollisionDetector::getFault()
   {
      return fault_;
@@ -77,9 +77,14 @@ namespace simple_collision_detector
   {
     ROS_DEBUG("SimpleCollisionDetector Detect Fault");
     if (isCollisionDetected){
-      diagnoseFault();
+      isolateFault();
     }
     return isCollisionDetected;
+  }
+
+  void SimpleCollisionDetector::isolateFault(){
+    ROS_INFO("Isolating Platform Collision");
+    diagnoseFault();
   }
 
   void SimpleCollisionDetector::diagnoseFault(){
