@@ -28,7 +28,8 @@ GlobalPlanner:
     use_grid_path: False            # default : False
     old_navfn_behavior: False       # default : False
 
-fault_detector: simple_collision_detector/SimpleCollisionDetector
+#fault_detector: simple_collision_detector/SimpleCollisionDetector
+fault_detector: collision_detector_diagnoser/CollisionDetectorDiagnoser
 
 sensor_fusion:
     sensor_number: 4

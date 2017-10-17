@@ -23,5 +23,3 @@
     <run_depend>costmap_2d</run_depend>
     <run_depend>tf</run_depend>
 </package>
-
-

@@ -1,0 +1,7 @@
+<library path="lib/libcollision_detector_diagnoser">
+  <class name="collision_detector_diagnoser/CollisionDetectorDiagnoser" type="collision_detector_diagnoser::CollisionDetectorDiagnoser" base_class_type="fault_core::FaultDetector">
+    <description>
+      A collision_detector_diagnoser that diagnoses robot platform collisions
+    </description>
+  </class>
+</library>
