@@ -12,10 +12,13 @@ using namespace message_filters;
 namespace collision_detector_diagnoser
 {
 
-  CollisionDetectorDiagnoser::CollisionDetectorDiagnoser(): isCollisionDetected(false)
+  CollisionDetectorDiagnoser::CollisionDetectorDiagnoser(): isCollisionDetected(false), time_of_collision_()
   {
+    ros::NodeHandle private_n;
     fault_.type_ =  FaultTopology::UNKNOWN_TYPE;
     fault_.cause_ = FaultTopology::UNKNOWN;
+    strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("kinetic_energy_drop");
+
     ROS_INFO("Constructor CollisionDetectorDiagnoser");
   }
 
@@ -33,7 +36,9 @@ namespace collision_detector_diagnoser
   void CollisionDetectorDiagnoser::mainCallBack(const fusion_msgs::sensorFusionMsg msg){
     ROS_DEBUG_STREAM("Message received " << msg.window_size);
     if (msg.msg == fusion_msgs::sensorFusionMsg::ERROR){
+      time_of_collision_ = msg.header;
       isCollisionDetected = true;
+
     }
     else{
       isCollisionDetected = false;
@@ -67,6 +72,14 @@ namespace collision_detector_diagnoser
   }
 
   void CollisionDetectorDiagnoser::diagnoseFault(){
+    //Force
+    kinetic_energy_monitor::KineticEnergyMonitorMsg srv;
+    srv.request.collision_time = time_of_collision_;
+
+    if(strength_srv_client_.call(srv)){
+      ROS_INFO_STREAM("Strength: " << srv.response.energy_lost);
+    }
+
     fault_.cause_ = FaultTopology::MISLOCALIZATION;
     ROS_ERROR_ONCE("Collision FOUND");
   }

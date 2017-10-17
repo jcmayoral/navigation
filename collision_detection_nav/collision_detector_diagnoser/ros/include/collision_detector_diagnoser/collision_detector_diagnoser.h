@@ -12,6 +12,7 @@
 #include <std_msgs/String.h>
 #include <geometry_msgs/AccelStamped.h>
 #include <fusion_msgs/sensorFusionMsg.h>
+#include <kinetic_energy_monitor/KineticEnergyMonitorMsg.h>
 
 namespace collision_detector_diagnoser
 {
@@ -63,6 +64,9 @@ namespace collision_detector_diagnoser
     private:
       std::vector<ros::Subscriber> array_subcribers_;
       bool isCollisionDetected;
+
+      std_msgs::Header time_of_collision_;
+      ros::ServiceClient strength_srv_client_;
   };
 
 }  // namespace collision_detector_diagnoser
