@@ -4,7 +4,6 @@
 #include <ros/ros.h>
 #include <string>
 #include <fault_core/fault_detector.h>
-#include <base_local_planner/costmap_model.h>
 #include <message_filters/subscriber.h>
 #include <message_filters/time_synchronizer.h>
 #include <message_filters/time_sequencer.h>
