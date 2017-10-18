@@ -12,6 +12,9 @@
         <arg name="robot_env" value="$(arg robot_env)" />
     </include>
 
+
+    <node pkg="kinetic_energy_monitor" type="kinetic_energy_monitor_server" respawn="true" name="kinetic_energy_monitor" output="screen" />
+
     <!-- move_base navigation -->
     <node pkg="move_base_fault_tolerant" type="move_base_fault_tolerant" respawn="true" name="move_base" output="screen">
         <!-- Remap from cmd_vel to care-o-bot 3 base controller topics -->
