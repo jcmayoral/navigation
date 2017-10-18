@@ -33,7 +33,9 @@ add_executable(collision_detector_diagnoser_node
 )
 
 target_link_libraries(collision_detector_diagnoser ${catkin_LIBRARIES})
-target_link_libraries(collision_detector_diagnoser_node collision_detector_diagnoser ${catkin_LIBRARIES})
+target_link_libraries(collision_detector_diagnoser_node collision_detector_diagnoser)
+add_dependencies(collision_detector_diagnoser_node collision_detector_diagnoser)
+
 
 
 ### INSTALLS

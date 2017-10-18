@@ -16,13 +16,14 @@ int main(int argc,char** argv){
     sensor_number = atoi(argv[2]);
   }
 
-  CollisionDetectorDiagnoser diagnoser_(sensor_number);
+  CollisionDetectorDiagnoser* diagnoser_ = new CollisionDetectorDiagnoser(sensor_number);
 
   while(ros::ok()){
-    if(diagnoser_.detectFault()){
+    if(diagnoser_->detectFault()){
       ROS_INFO_STREAM("Collision Detected");
     }
-    //ROS_INFO_STREAM(result);
+    //diagnoser_.isolateFault();
+    ros::spinOnce(); // the missing call
   }
 
   //ros::spin();
