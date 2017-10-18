@@ -25,6 +25,9 @@ namespace collision_detector_diagnoser
        * @brief Constructor
        */
       CollisionDetectorDiagnoser();
+      //Node
+      CollisionDetectorDiagnoser(int sensor_number);
+
 
       /**
        * @brief Destructor

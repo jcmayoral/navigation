@@ -22,6 +22,16 @@ namespace collision_detector_diagnoser
     ROS_INFO("Constructor CollisionDetectorDiagnoser");
   }
 
+  CollisionDetectorDiagnoser::CollisionDetectorDiagnoser(int sensor_number): isCollisionDetected(false), time_of_collision_()
+  {
+    ros::NodeHandle private_n;
+    fault_.type_ =  FaultTopology::UNKNOWN_TYPE;
+    fault_.cause_ = FaultTopology::UNKNOWN;
+    strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("kinetic_energy_drop");
+    initialize(sensor_number);
+    ROS_INFO("Constructor CollisionDetectorDiagnoser");
+  }
+
 
   CollisionDetectorDiagnoser::~CollisionDetectorDiagnoser()
   {

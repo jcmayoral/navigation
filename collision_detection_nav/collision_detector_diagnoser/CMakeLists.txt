@@ -33,15 +33,18 @@ add_executable(collision_detector_diagnoser_node
 )
 
 target_link_libraries(collision_detector_diagnoser ${catkin_LIBRARIES})
-target_link_libraries(collision_detector_diagnoser_node collision_detector_diagnoser)
+target_link_libraries(collision_detector_diagnoser_node collision_detector_diagnoser ${catkin_LIBRARIES})
 
 
 ### INSTALLS
 install(TARGETS
   collision_detector_diagnoser
-  collision_detector_diagnoser_node
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+install(TARGETS
+  collision_detector_diagnoser_node
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
