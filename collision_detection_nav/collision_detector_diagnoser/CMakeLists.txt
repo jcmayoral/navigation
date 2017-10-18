@@ -27,12 +27,22 @@ catkin_package(
 )
 
 add_library(collision_detector_diagnoser ros/src/collision_detector_diagnoser.cpp)
+
+add_executable(collision_detector_diagnoser_node
+  ros/script/collision_detector_diagnoser_node.cpp
+)
+
 target_link_libraries(collision_detector_diagnoser ${catkin_LIBRARIES})
+target_link_libraries(collision_detector_diagnoser_node collision_detector_diagnoser)
+
 
 ### INSTALLS
-install(TARGETS collision_detector_diagnoser
+install(TARGETS
+  collision_detector_diagnoser
+  collision_detector_diagnoser_node
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 install(FILES fault_plugin.xml
