@@ -69,9 +69,9 @@ namespace collision_detector_diagnoser
   bool CollisionDetectorDiagnoser::detectFault()
   {
     ROS_DEBUG("SimpleCollisionDetector Detect Fault");
-    if (isCollisionDetected){
-      isolateFault();
-    }
+    //if (isCollisionDetected){
+    // isolateFault();
+    //}
     return isCollisionDetected;
   }
 

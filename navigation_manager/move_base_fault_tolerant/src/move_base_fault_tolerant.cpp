@@ -426,29 +426,30 @@ namespace move_base_fault_tolerant {
         ROS_ERROR("move_base in state RECOVERING");
         //FaultTolerantMoveBase::recoveryFault();
         //publishZeroVelocity();
-
-	bool result = true;
-	int i = 0;
+        bool result = true;
+        int i = 0;
+        fd_->isolateFault();
 
         for (i; i<fault_recovery_behaviors_.size(); i++){
           if (fd_->getFault().cause_ == fault_recovery_behaviors_[i]->getType()){
             result = fault_recovery_behaviors_[i]->runFaultBehavior();
             ROS_INFO("Fault Recovery Running");
-	    i = fault_recovery_behaviors_.size();
+            i = fault_recovery_behaviors_.size();
           }
         }
 
         if (i == fault_recovery_behaviors_.size())
              ROS_WARN("Not Fault Recovery Behavior Found");
 
-	if (!result){
-	    as_->setAborted(move_base_msgs::MoveBaseResult(), "Collision Recovery Failure.");
-            resetState();
-            return true;
+	      if (!result){
+          as_->setAborted(move_base_msgs::MoveBaseResult(), "Collision Recovery Failure.");
+          resetState();
+          return true;
         }
         else {
-	    ROS_INFO("Collision Recovery Sucess");
-            setState(MoveBaseState::CONTROLLING);
+          ROS_INFO("Collision Recovery Sucess");
+          setRunPlanner(true);
+          setState(MoveBaseState::CONTROLLING);
         }
         //return true;
         break;
