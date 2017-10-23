@@ -9,6 +9,8 @@ find_package(catkin REQUIRED
         fusion_msgs
         pluginlib
         fault_core
+        footprint_checker
+        kinetic_energy_monitor
         )
 
 include_directories(ros/include
@@ -24,6 +26,8 @@ catkin_package(
         fusion_msgs
         pluginlib
         fault_core
+        footprint_checker
+        kinetic_energy_monitor
 )
 
 add_library(collision_detector_diagnoser ros/src/collision_detector_diagnoser.cpp)

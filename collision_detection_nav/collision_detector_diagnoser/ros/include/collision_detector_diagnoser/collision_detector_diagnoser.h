@@ -13,6 +13,7 @@
 #include <geometry_msgs/AccelStamped.h>
 #include <fusion_msgs/sensorFusionMsg.h>
 #include <kinetic_energy_monitor/KineticEnergyMonitorMsg.h>
+#include <footprint_checker/CollisionCheckerMsg.h>
 
 namespace collision_detector_diagnoser
 {
@@ -70,6 +71,7 @@ namespace collision_detector_diagnoser
 
       std_msgs::Header time_of_collision_;
       ros::ServiceClient strength_srv_client_;
+      ros::ServiceClient orientations_srv_client_;
   };
 
 }  // namespace collision_detector_diagnoser

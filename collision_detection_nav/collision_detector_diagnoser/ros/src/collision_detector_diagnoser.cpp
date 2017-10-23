@@ -18,7 +18,7 @@ namespace collision_detector_diagnoser
     fault_.type_ =  FaultTopology::UNKNOWN_TYPE;
     fault_.cause_ = FaultTopology::UNKNOWN;
     strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("kinetic_energy_drop");
-
+    orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("kinetic_energy_drop");
     ROS_INFO("Constructor CollisionDetectorDiagnoser");
   }
 
@@ -28,6 +28,7 @@ namespace collision_detector_diagnoser
     fault_.type_ =  FaultTopology::UNKNOWN_TYPE;
     fault_.cause_ = FaultTopology::UNKNOWN;
     strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("kinetic_energy_drop");
+    orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("colliision_checker");
     initialize(sensor_number);
     ROS_INFO("Constructor CollisionDetectorDiagnoser");
   }
@@ -76,6 +77,13 @@ namespace collision_detector_diagnoser
   }
 
   void CollisionDetectorDiagnoser::isolateFault(){
+
+    footprint_checker::CollisionCheckerMsg srv;
+
+    if(orientations_srv_client_.call(srv)){
+      ROS_INFO("Orientations Computed Correctly");
+    }
+
     fault_.type_ = FaultTopology::COLLISION;
     ROS_INFO("Isolating Platform Collision");
     diagnoseFault();
