@@ -18,7 +18,7 @@ namespace collision_detector_diagnoser
     fault_.type_ =  FaultTopology::UNKNOWN_TYPE;
     fault_.cause_ = FaultTopology::UNKNOWN;
     strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("kinetic_energy_drop");
-    orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("kinetic_energy_drop");
+    orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("collision_checker");
     ROS_INFO("Constructor CollisionDetectorDiagnoser");
   }
 
@@ -28,7 +28,7 @@ namespace collision_detector_diagnoser
     fault_.type_ =  FaultTopology::UNKNOWN_TYPE;
     fault_.cause_ = FaultTopology::UNKNOWN;
     strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("kinetic_energy_drop");
-    orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("colliision_checker");
+    orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("collision_checker");
     initialize(sensor_number);
     ROS_INFO("Constructor CollisionDetectorDiagnoser");
   }
@@ -82,6 +82,9 @@ namespace collision_detector_diagnoser
 
     if(orientations_srv_client_.call(srv)){
       ROS_INFO("Orientations Computed Correctly");
+    }
+    else{
+      ROS_WARN("Error in orientations Server");
     }
 
     fault_.type_ = FaultTopology::COLLISION;
