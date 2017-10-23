@@ -14,6 +14,7 @@
 
 
     <node pkg="kinetic_energy_monitor" type="kinetic_energy_monitor_server" respawn="true" name="kinetic_energy_monitor" output="screen" />
+    <node pkg="footprint_checker" type="base_collision_checker_server" respawn="true" name="base_collision_checker" output="screen" />
 
     <!-- move_base navigation -->
     <node pkg="move_base_fault_tolerant" type="move_base_fault_tolerant" respawn="true" name="move_base" output="screen">
