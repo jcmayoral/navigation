@@ -21,6 +21,7 @@ int main(int argc,char** argv){
   while(ros::ok()){
     if(diagnoser_->detectFault()){
       ROS_INFO_STREAM("Collision Detected");
+      diagnoser_->isolateFault();
     }
     //diagnoser_.isolateFault();
     ros::spinOnce(); // the missing call
