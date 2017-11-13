@@ -80,7 +80,7 @@ namespace collision_detector_diagnoser
     sub_1_ = new message_filters::Subscriber<fusion_msgs::sensorFusionMsg>(nh, "collisions_2", 10);
     //typedef message_filters::sync_policies::ApproximateTime<fusion_msgs::sensorFusionMsg, fusion_msgs::sensorFusionMsg> MySyncPolicy;
     sync_ = new message_filters::Synchronizer<MySyncPolicy>(MySyncPolicy(10),*sub_0_,*sub_1_);
-    sync_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::mainCallBack,this,  _1, _2));
+    sync_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::mainCallBack,this,_1, _2));
     ROS_INFO("Done");
   }
 
