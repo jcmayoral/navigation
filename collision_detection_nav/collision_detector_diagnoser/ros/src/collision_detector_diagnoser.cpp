@@ -43,7 +43,11 @@ namespace collision_detector_diagnoser
   {
      return fault_;
   }
+  void CollisionDetectorDiagnoser::mainCallBack(const fusion_msgs::sensorFusionMsgConstPtr& detector_1, const fusion_msgs::sensorFusionMsgConstPtr& detector_2){
+    ROS_INFO_STREAM(detector_1->msg << detector_2->msg);
+  }
 
+  /*
   void CollisionDetectorDiagnoser::mainCallBack(const fusion_msgs::sensorFusionMsg msg){
     ROS_DEBUG_STREAM("Message received " << msg.window_size);
     if (msg.msg == fusion_msgs::sensorFusionMsg::ERROR){
@@ -55,16 +59,21 @@ namespace collision_detector_diagnoser
       isCollisionDetected = false;
     }
   }
+  */
 
   void CollisionDetectorDiagnoser::initialize(int sensor_number)
   {
     ros::NodeHandle nh;
     ROS_INFO_STREAM("initializing " << sensor_number << " sensors");
-    for (int i = 0; i< sensor_number;i++){
-      ros::Subscriber sub = nh.subscribe("collisions_"+std::to_string(i), 10, &CollisionDetectorDiagnoser::mainCallBack, this);
-      array_subcribers_.push_back(sub);
-    }
-
+    //for (int i = 0; i< sensor_number;i++){
+      //ros::Subscriber sub = nh.subscribe("collisions_"+std::to_string(i), 10, &CollisionDetectorDiagnoser::mainCallBack, this);
+      //array_subcribers_.push_back(sub);
+    //}
+    sub_0_ = new message_filters::Subscriber<fusion_msgs::sensorFusionMsg>(nh, "collisions_1", 10);
+    sub_1_ = new message_filters::Subscriber<fusion_msgs::sensorFusionMsg>(nh, "collisions_2", 10);
+    sync_ = new message_filters::TimeSynchronizer<fusion_msgs::sensorFusionMsg, fusion_msgs::sensorFusionMsg> (*sub_0_,*sub_1_, 10);
+    sync_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::mainCallBack,this,  _1, _2));
+    ROS_INFO("Done");
   }
 
   bool CollisionDetectorDiagnoser::detectFault()

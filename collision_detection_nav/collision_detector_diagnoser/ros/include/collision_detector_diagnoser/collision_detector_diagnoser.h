@@ -61,15 +61,20 @@ namespace collision_detector_diagnoser
        */
       fault_core::FaultTopology getFault();
 
-      void mainCallBack(const fusion_msgs::sensorFusionMsg msg);
+      //void mainCallBack(const fusion_msgs::sensorFusionMsg msg);
+      void mainCallBack(const fusion_msgs::sensorFusionMsgConstPtr& detector_1, const fusion_msgs::sensorFusionMsgConstPtr& detector_2);
+
       //void secondCallBack(const sensor_msgs::ImageConstPtr& msg1, const sensor_msgs::ImageConstPtr&  msg2);
       //void thirdCallBack(const geometry_msgs::AccelStamped::ConstPtr& msg);
 
     private:
       std::vector<ros::Subscriber> array_subcribers_;
       bool isCollisionDetected;
-
       std_msgs::Header time_of_collision_;
+      message_filters::Subscriber<fusion_msgs::sensorFusionMsg> *sub_0_;
+      message_filters::Subscriber<fusion_msgs::sensorFusionMsg> *sub_1_;
+      message_filters::TimeSynchronizer<fusion_msgs::sensorFusionMsg, fusion_msgs::sensorFusionMsg>*sync_;
+
       ros::ServiceClient strength_srv_client_;
       ros::ServiceClient orientations_srv_client_;
   };
