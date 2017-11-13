@@ -13,7 +13,7 @@ int main(int argc,char** argv){
     ROS_INFO("Setting 1 sensor");
   }
   else{
-    sensor_number = atoi(argv[2]);
+    sensor_number = atoi(argv[1]);
   }
 
   CollisionDetectorDiagnoser* diagnoser_ = new CollisionDetectorDiagnoser(sensor_number);
