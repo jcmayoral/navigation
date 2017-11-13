@@ -7,6 +7,7 @@
 #include <message_filters/subscriber.h>
 #include <message_filters/time_synchronizer.h>
 #include <message_filters/time_sequencer.h>
+#include <message_filters/sync_policies/approximate_time.h>
 #include <cv_bridge/cv_bridge.h>
 #include <std_msgs/Float32.h>
 #include <std_msgs/String.h>
@@ -73,7 +74,8 @@ namespace collision_detector_diagnoser
       std_msgs::Header time_of_collision_;
       message_filters::Subscriber<fusion_msgs::sensorFusionMsg> *sub_0_;
       message_filters::Subscriber<fusion_msgs::sensorFusionMsg> *sub_1_;
-      message_filters::TimeSynchronizer<fusion_msgs::sensorFusionMsg, fusion_msgs::sensorFusionMsg>*sync_;
+      typedef message_filters::sync_policies::ApproximateTime<fusion_msgs::sensorFusionMsg, fusion_msgs::sensorFusionMsg> MySyncPolicy;
+      message_filters::Synchronizer<MySyncPolicy>*sync_;
 
       ros::ServiceClient strength_srv_client_;
       ros::ServiceClient orientations_srv_client_;

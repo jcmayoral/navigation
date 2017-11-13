@@ -44,7 +44,14 @@ namespace collision_detector_diagnoser
      return fault_;
   }
   void CollisionDetectorDiagnoser::mainCallBack(const fusion_msgs::sensorFusionMsgConstPtr& detector_1, const fusion_msgs::sensorFusionMsgConstPtr& detector_2){
-    ROS_INFO_STREAM(detector_1->msg << detector_2->msg);
+    if (detector_1.msg == fusion_msgs::sensorFusionMsg::ERROR  || detector_2.msg == fusion_msgs::sensorFusionMsg::ERROR){
+      time_of_collision_ = msg.header;
+      isCollisionDetected = true;
+
+    }
+    else{
+      isCollisionDetected = false;
+    }
   }
 
   /*
@@ -71,7 +78,8 @@ namespace collision_detector_diagnoser
     //}
     sub_0_ = new message_filters::Subscriber<fusion_msgs::sensorFusionMsg>(nh, "collisions_1", 10);
     sub_1_ = new message_filters::Subscriber<fusion_msgs::sensorFusionMsg>(nh, "collisions_2", 10);
-    sync_ = new message_filters::TimeSynchronizer<fusion_msgs::sensorFusionMsg, fusion_msgs::sensorFusionMsg> (*sub_0_,*sub_1_, 10);
+    //typedef message_filters::sync_policies::ApproximateTime<fusion_msgs::sensorFusionMsg, fusion_msgs::sensorFusionMsg> MySyncPolicy;
+    sync_ = new message_filters::Synchronizer<MySyncPolicy>(MySyncPolicy(10),*sub_0_,*sub_1_);
     sync_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::mainCallBack,this,  _1, _2));
     ROS_INFO("Done");
   }
