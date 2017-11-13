@@ -44,8 +44,8 @@ namespace collision_detector_diagnoser
      return fault_;
   }
   void CollisionDetectorDiagnoser::mainCallBack(const fusion_msgs::sensorFusionMsgConstPtr& detector_1, const fusion_msgs::sensorFusionMsgConstPtr& detector_2){
-    if (detector_1.msg == fusion_msgs::sensorFusionMsg::ERROR  || detector_2.msg == fusion_msgs::sensorFusionMsg::ERROR){
-      time_of_collision_ = msg.header;
+    if (detector_1->msg == fusion_msgs::sensorFusionMsg::ERROR  || detector_2->msg == fusion_msgs::sensorFusionMsg::ERROR){
+      time_of_collision_ = detector_1->header; //TODO
       isCollisionDetected = true;
 
     }
