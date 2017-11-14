@@ -80,7 +80,7 @@ namespace collision_detector_diagnoser
   {
     ros::NodeHandle nh;
     ROS_INFO_STREAM("initializing " << sensor_number_ << " sensors");
-    ROS_INFO_STREAM("Method" << std(mode_) << " Selected");
+    ROS_INFO_STREAM("Method" << std::to_string(mode_) << " Selected");
 
     switch(mode_){
 
