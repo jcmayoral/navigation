@@ -53,6 +53,7 @@ namespace collision_detector_diagnoser
      return fault_;
   }
   void CollisionDetectorDiagnoser::mainCallBack(const fusion_msgs::sensorFusionMsgConstPtr& detector_1, const fusion_msgs::sensorFusionMsgConstPtr& detector_2){
+    ROS_INFO("HELLOOOOOOOOOOOOOOOOOOOOOOOOOOO");
     if (detector_1->msg == fusion_msgs::sensorFusionMsg::ERROR  || detector_2->msg == fusion_msgs::sensorFusionMsg::ERROR){
       time_of_collision_ = detector_1->header; //TODO
       isCollisionDetected = true;
@@ -84,12 +85,16 @@ namespace collision_detector_diagnoser
 
       case 0:
         ROS_INFO("Method 0");
+        sub_0_->unsubscribe();
+        sub_1_->unsubscribe();
+        sync_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::mainCallBack,this,_1, _2));
         array_subcribers_.clear();
 
         for (int i = 0; i< sensor_number_;i++){
           ros::Subscriber sub = nh.subscribe("collisions_"+std::to_string(i), 10, &CollisionDetectorDiagnoser::simpleCallBack, this);
           array_subcribers_.push_back(sub);
         }
+
         break;
       case 1:
 
