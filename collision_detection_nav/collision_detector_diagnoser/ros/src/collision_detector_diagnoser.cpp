@@ -38,7 +38,7 @@ namespace collision_detector_diagnoser
   }
 
   void CollisionDetectorDiagnoser::dyn_reconfigureCB(collision_detector_diagnoser::dynamic_reconfigureConfig &config, uint32_t level){
-    ROS_INFO_STREAM(config.mode);
+    //ROS_INFO_STREAM(config.mode);
     mode_ = config.mode;
     initialize(sensor_number_);
   }
@@ -84,15 +84,21 @@ namespace collision_detector_diagnoser
     switch(mode_){
 
       case 0:
-        ROS_INFO("Method 0");
-        if (sub_0_){
-          sub_0_->unsubscribe();
-          sub_1_->unsubscribe();
+        ROS_INFO_STREAM("Method 0" << filtered_subscribers_.empty());
+        if (!filtered_subscribers_.empty()){
+          //sub_0_->unsubscribe();
+          //sub_1_->unsubscribe();
+          //ROS_INFO("inside");
+          for(int i=0; i< sensor_number; i++){
+            filtered_subscribers_.at(i)->unsubscribe();
+          }
           sync_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::mainCallBack,this,_1, _2));
+          filtered_subscribers_.clear();
         }
-        array_subcribers_.clear();
 
-        for (int i = 0; i< sensor_number_;i++){
+        ROS_INFO("Here");
+        ROS_INFO("Here");
+        for (int i = 1; i< sensor_number_;i++){
           ros::Subscriber sub = nh.subscribe("collisions_"+std::to_string(i), 10, &CollisionDetectorDiagnoser::simpleCallBack, this);
           array_subcribers_.push_back(sub);
         }
@@ -103,12 +109,13 @@ namespace collision_detector_diagnoser
         for (int i = 0; i< array_subcribers_.size();i++){
           array_subcribers_[i].shutdown();
         }
-
+        array_subcribers_.clear();
         ROS_INFO("Method 1");
-        sub_0_ = new message_filters::Subscriber<fusion_msgs::sensorFusionMsg>(nh, "collisions_1", 10);
-        sub_1_ = new message_filters::Subscriber<fusion_msgs::sensorFusionMsg>(nh, "collisions_2", 10);
+        for(int i=1; i< sensor_number; i++){
+          filtered_subscribers_.push_back(new message_filters::Subscriber<fusion_msgs::sensorFusionMsg>(nh, "collisions_"+std::to_string(i), 10));
+        }
         //typedef message_filters::sync_policies::ApproximateTime<fusion_msgs::sensorFusionMsg, fusion_msgs::sensorFusionMsg> MySyncPolicy;
-        sync_ = new message_filters::Synchronizer<MySyncPolicy>(MySyncPolicy(10),*sub_0_,*sub_1_);
+        sync_ = new message_filters::Synchronizer<MySyncPolicy>(MySyncPolicy(10),*filtered_subscribers_.at(0), *filtered_subscribers_.at(1));
         sync_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::mainCallBack,this,_1, _2));
         break;
       default:

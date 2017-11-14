@@ -77,8 +77,9 @@ namespace collision_detector_diagnoser
       std::vector<ros::Subscriber> array_subcribers_;
       bool isCollisionDetected;
       std_msgs::Header time_of_collision_;
-      message_filters::Subscriber<fusion_msgs::sensorFusionMsg> *sub_0_;
-      message_filters::Subscriber<fusion_msgs::sensorFusionMsg> *sub_1_;
+      std::vector<message_filters::Subscriber<fusion_msgs::sensorFusionMsg>*> filtered_subscribers_;
+      //message_filters::Subscriber<fusion_msgs::sensorFusionMsg> *sub_0_;
+      //message_filters::Subscriber<fusion_msgs::sensorFusionMsg> *sub_1_;
       typedef message_filters::sync_policies::ApproximateTime<fusion_msgs::sensorFusionMsg, fusion_msgs::sensorFusionMsg> MySyncPolicy;
       message_filters::Synchronizer<MySyncPolicy>*sync_;
 
