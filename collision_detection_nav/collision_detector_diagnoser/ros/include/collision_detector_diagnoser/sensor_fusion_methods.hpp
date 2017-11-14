@@ -21,6 +21,7 @@ class ConsensusApproach : public SensorFusionApproach {
         int counter = 0;
         for (std::list<fusion_msgs::sensorFusionMsg>::iterator it=v.begin(); it != v.end(); ++it){
           if(it->msg == fusion_msgs::sensorFusionMsg::ERROR){
+            ROS_WARN_STREAM("Collision DETECTED on " << it->sensor_id);
             counter ++;
           }
         }
