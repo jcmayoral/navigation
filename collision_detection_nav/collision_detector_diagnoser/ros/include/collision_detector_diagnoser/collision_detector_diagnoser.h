@@ -67,6 +67,7 @@ namespace collision_detector_diagnoser
 
       //void mainCallBack(const fusion_msgs::sensorFusionMsg msg);
       void mainCallBack(const fusion_msgs::sensorFusionMsgConstPtr& detector_1, const fusion_msgs::sensorFusionMsgConstPtr& detector_2);
+      void simpleCallBack(const fusion_msgs::sensorFusionMsg msg);
 
       //void secondCallBack(const sensor_msgs::ImageConstPtr& msg1, const sensor_msgs::ImageConstPtr&  msg2);
       //void thirdCallBack(const geometry_msgs::AccelStamped::ConstPtr& msg);
@@ -87,6 +88,8 @@ namespace collision_detector_diagnoser
       //Dynamic Reconfigure
       dynamic_reconfigure::Server<collision_detector_diagnoser::dynamic_reconfigureConfig> dyn_server;
       dynamic_reconfigure::Server<collision_detector_diagnoser::dynamic_reconfigureConfig>::CallbackType dyn_server_cb;
+      int mode_;
+      int sensor_number_;
   };
 
 }  // namespace collision_detector_diagnoser
