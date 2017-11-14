@@ -40,7 +40,7 @@ namespace collision_detector_diagnoser
   void CollisionDetectorDiagnoser::dyn_reconfigureCB(collision_detector_diagnoser::dynamic_reconfigureConfig &config, uint32_t level){
     //ROS_INFO_STREAM(config.mode);
     mode_ = config.mode;
-    filter_ = config.filter_allow;
+    filter_ = config.allow_filter;
     initialize(sensor_number_);
   }
 
