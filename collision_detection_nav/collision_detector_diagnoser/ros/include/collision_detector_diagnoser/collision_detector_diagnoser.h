@@ -66,7 +66,13 @@ namespace collision_detector_diagnoser
       fault_core::FaultTopology getFault();
 
       //void mainCallBack(const fusion_msgs::sensorFusionMsg msg);
-      void mainCallBack(const fusion_msgs::sensorFusionMsgConstPtr& detector_1, const fusion_msgs::sensorFusionMsgConstPtr& detector_2);
+      void twoSensorsCallBack(const fusion_msgs::sensorFusionMsgConstPtr& detector_1,
+                              const fusion_msgs::sensorFusionMsgConstPtr& detector_2);
+
+      void threeSensorsCallBack(const fusion_msgs::sensorFusionMsgConstPtr& detector_1,
+                                const fusion_msgs::sensorFusionMsgConstPtr& detector_2,
+                                const fusion_msgs::sensorFusionMsgConstPtr& detector_3);
+
       void simpleCallBack(const fusion_msgs::sensorFusionMsg msg);
 
       //void secondCallBack(const sensor_msgs::ImageConstPtr& msg1, const sensor_msgs::ImageConstPtr&  msg2);
@@ -80,8 +86,25 @@ namespace collision_detector_diagnoser
       std::vector<message_filters::Subscriber<fusion_msgs::sensorFusionMsg>*> filtered_subscribers_;
       //message_filters::Subscriber<fusion_msgs::sensorFusionMsg> *sub_0_;
       //message_filters::Subscriber<fusion_msgs::sensorFusionMsg> *sub_1_;
-      typedef message_filters::sync_policies::ApproximateTime<fusion_msgs::sensorFusionMsg, fusion_msgs::sensorFusionMsg> MySyncPolicy;
-      message_filters::Synchronizer<MySyncPolicy>*sync_;
+      typedef message_filters::sync_policies::ApproximateTime<fusion_msgs::sensorFusionMsg,
+                                                              fusion_msgs::sensorFusionMsg> MySyncPolicy2;
+
+      typedef message_filters::sync_policies::ApproximateTime<fusion_msgs::sensorFusionMsg,
+                                                              fusion_msgs::sensorFusionMsg,
+                                                              fusion_msgs::sensorFusionMsg> MySyncPolicy3;
+
+      typedef message_filters::sync_policies::ApproximateTime<fusion_msgs::sensorFusionMsg,
+                                                              fusion_msgs::sensorFusionMsg,
+                                                              fusion_msgs::sensorFusionMsg,
+                                                              fusion_msgs::sensorFusionMsg> MySyncPolicy4;
+
+      typedef message_filters::sync_policies::ApproximateTime<fusion_msgs::sensorFusionMsg,
+                                                              fusion_msgs::sensorFusionMsg,
+                                                              fusion_msgs::sensorFusionMsg,
+                                                              fusion_msgs::sensorFusionMsg,
+                                                              fusion_msgs::sensorFusionMsg> MySyncPolicy5;
+
+      message_filters::Synchronizer<MySyncPolicy2>*sync_;
 
       ros::ServiceClient strength_srv_client_;
       ros::ServiceClient orientations_srv_client_;
