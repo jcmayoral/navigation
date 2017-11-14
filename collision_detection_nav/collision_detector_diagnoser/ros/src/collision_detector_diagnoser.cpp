@@ -53,7 +53,7 @@ namespace collision_detector_diagnoser
      return fault_;
   }
   void CollisionDetectorDiagnoser::mainCallBack(const fusion_msgs::sensorFusionMsgConstPtr& detector_1, const fusion_msgs::sensorFusionMsgConstPtr& detector_2){
-    ROS_INFO("HELLOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+    ROS_INFO_ONCE("Filtering");
     if (detector_1->msg == fusion_msgs::sensorFusionMsg::ERROR  || detector_2->msg == fusion_msgs::sensorFusionMsg::ERROR){
       time_of_collision_ = detector_1->header; //TODO
       isCollisionDetected = true;
@@ -65,7 +65,7 @@ namespace collision_detector_diagnoser
   }
 
   void CollisionDetectorDiagnoser::simpleCallBack(const fusion_msgs::sensorFusionMsg msg){
-    ROS_INFO_STREAM("Message received " << msg.window_size);
+    ROS_INFO_ONCE("Simple Filtering");
     if (msg.msg == fusion_msgs::sensorFusionMsg::ERROR){
       time_of_collision_ = msg.header;
       isCollisionDetected = true;
@@ -80,11 +80,11 @@ namespace collision_detector_diagnoser
   {
     ros::NodeHandle nh;
     ROS_INFO_STREAM("initializing " << sensor_number_ << " sensors");
+    ROS_INFO_STREAM("Method" << std(mode_) << " Selected");
 
     switch(mode_){
 
       case 0:
-        ROS_INFO_STREAM("Method 0" << filtered_subscribers_.empty());
         if (!filtered_subscribers_.empty()){
           //sub_0_->unsubscribe();
           //sub_1_->unsubscribe();
@@ -96,21 +96,20 @@ namespace collision_detector_diagnoser
           filtered_subscribers_.clear();
         }
 
-        ROS_INFO("Here");
-        ROS_INFO("Here");
         for (int i = 1; i< sensor_number_;i++){
           ros::Subscriber sub = nh.subscribe("collisions_"+std::to_string(i), 10, &CollisionDetectorDiagnoser::simpleCallBack, this);
           array_subcribers_.push_back(sub);
         }
 
         break;
+
       case 1:
 
         for (int i = 0; i< array_subcribers_.size();i++){
           array_subcribers_[i].shutdown();
         }
         array_subcribers_.clear();
-        ROS_INFO("Method 1");
+
         for(int i=1; i< sensor_number; i++){
           filtered_subscribers_.push_back(new message_filters::Subscriber<fusion_msgs::sensorFusionMsg>(nh, "collisions_"+std::to_string(i), 10));
         }
@@ -118,6 +117,7 @@ namespace collision_detector_diagnoser
         sync_ = new message_filters::Synchronizer<MySyncPolicy>(MySyncPolicy(10),*filtered_subscribers_.at(0), *filtered_subscribers_.at(1));
         sync_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::mainCallBack,this,_1, _2));
         break;
+
       default:
         ROS_ERROR("Method can not be changed");
         break;
