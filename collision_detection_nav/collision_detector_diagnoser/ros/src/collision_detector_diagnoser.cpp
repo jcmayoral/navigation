@@ -19,7 +19,9 @@ namespace collision_detector_diagnoser
     fault_.cause_ = FaultTopology::UNKNOWN;
     strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("kinetic_energy_drop");
     orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("collision_checker");
-    ROS_INFO("Constructor CollisionDetectorDiagnoser");
+    dyn_server_cb = boost::bind(&CollisionDetectorDiagnoser::dyn_reconfigureCB, this, _1, _2);
+    dyn_server.setCallback(dyn_server_cb);
+    ROS_INFO("Default Constructor CollisionDetectorDiagnoser");
   }
 
   CollisionDetectorDiagnoser::CollisionDetectorDiagnoser(int sensor_number): isCollisionDetected(false), time_of_collision_()
@@ -29,10 +31,15 @@ namespace collision_detector_diagnoser
     fault_.cause_ = FaultTopology::UNKNOWN;
     strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("kinetic_energy_drop");
     orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("collision_checker");
+    dyn_server_cb = boost::bind(&CollisionDetectorDiagnoser::dyn_reconfigureCB, this, _1, _2);
+    dyn_server.setCallback(dyn_server_cb);
     initialize(sensor_number);
     ROS_INFO("Constructor CollisionDetectorDiagnoser");
   }
 
+  void CollisionDetectorDiagnoser::dyn_reconfigureCB(collision_detector_diagnoser::dynamic_reconfigureConfig &config, uint32_t level){
+    ROS_INFO_STREAM(config.mode);
+  }
 
   CollisionDetectorDiagnoser::~CollisionDetectorDiagnoser()
   {

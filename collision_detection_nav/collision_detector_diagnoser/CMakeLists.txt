@@ -4,17 +4,22 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
 find_package(catkin REQUIRED
         COMPONENTS
-        dynamic_reconfigure
         roscpp
         fusion_msgs
         pluginlib
         fault_core
         footprint_checker
         kinetic_energy_monitor
-        )
+        dynamic_reconfigure
+)
 
 include_directories(ros/include
-                    ${catkin_INCLUDE_DIRS})
+                    ${catkin_INCLUDE_DIRS}
+)
+
+generate_dynamic_reconfigure_options(
+  ros/cfg/diagnoser.cfg
+)
 
 catkin_package(
     INCLUDE_DIRS
@@ -38,9 +43,9 @@ add_executable(collision_detector_diagnoser_node
 
 target_link_libraries(collision_detector_diagnoser ${catkin_LIBRARIES})
 target_link_libraries(collision_detector_diagnoser_node collision_detector_diagnoser)
+
 add_dependencies(collision_detector_diagnoser_node collision_detector_diagnoser)
-
-
+add_dependencies(collision_detector_diagnoser_node ${PROJECT_NAME}_gencfg)
 
 ### INSTALLS
 install(TARGETS
@@ -63,6 +68,6 @@ install(DIRECTORY ros/include/${PROJECT_NAME}/
   FILES_MATCHING PATTERN "*.h"
 )
 
-install(DIRECTORY ros/config
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/ros/config
+install(DIRECTORY ros/cfg
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/ros/cfg
 )
