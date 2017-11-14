@@ -85,9 +85,11 @@ namespace collision_detector_diagnoser
 
       case 0:
         ROS_INFO("Method 0");
-        sub_0_->unsubscribe();
-        sub_1_->unsubscribe();
-        sync_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::mainCallBack,this,_1, _2));
+        if (sub_0_){
+          sub_0_->unsubscribe();
+          sub_1_->unsubscribe();
+          sync_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::mainCallBack,this,_1, _2));
+        }
         array_subcribers_.clear();
 
         for (int i = 0; i< sensor_number_;i++){
