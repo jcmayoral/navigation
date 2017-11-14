@@ -6,8 +6,8 @@ using namespace std;
 
 class SensorFusionApproach {
   public:
-    bool detect(list<fusion_msgs::sensorFusionMsg> v) {
-      ROS_INFO("Default");
+    virtual bool detect(list<fusion_msgs::sensorFusionMsg> v) {
+      ROS_DEBUG("Default");
       return false;
     };
 };
@@ -15,7 +15,7 @@ class SensorFusionApproach {
 class ConsensusApproach : public SensorFusionApproach {
     public:
     bool detect(list<fusion_msgs::sensorFusionMsg> v){
-      ROS_INFO("Consensus");
+      ROS_DEBUG("Consensus");
       return 0;
     };
 };

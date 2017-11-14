@@ -6,11 +6,7 @@
 #include <fault_core/fault_detector.h>
 #include <message_filters/subscriber.h>
 #include <message_filters/time_synchronizer.h>
-#include <message_filters/time_sequencer.h>
 #include <message_filters/sync_policies/approximate_time.h>
-#include <cv_bridge/cv_bridge.h>
-#include <std_msgs/Float32.h>
-#include <std_msgs/String.h>
 #include <geometry_msgs/AccelStamped.h>
 #include <fusion_msgs/sensorFusionMsg.h>
 #include <kinetic_energy_monitor/KineticEnergyMonitorMsg.h>
@@ -81,14 +77,13 @@ namespace collision_detector_diagnoser
       //void thirdCallBack(const geometry_msgs::AccelStamped::ConstPtr& msg);
       void dyn_reconfigureCB(collision_detector_diagnoser::dynamic_reconfigureConfig &config, uint32_t level);
 
+      void selectMode();
+
     private:
       std::vector<ros::Subscriber> array_subcribers_;
       bool isCollisionDetected;
       std_msgs::Header time_of_collision_;
       std::vector<message_filters::Subscriber<fusion_msgs::sensorFusionMsg>*> filtered_subscribers_;
-      //message_filters::Subscriber<fusion_msgs::sensorFusionMsg> *sub_0_;
-      //message_filters::Subscriber<fusion_msgs::sensorFusionMsg> *sub_1_;
-
 
       message_filters::Synchronizer<MySyncPolicy2>*sync_;
 
@@ -98,10 +93,14 @@ namespace collision_detector_diagnoser
       //Dynamic Reconfigure
       dynamic_reconfigure::Server<collision_detector_diagnoser::dynamic_reconfigureConfig> dyn_server;
       dynamic_reconfigure::Server<collision_detector_diagnoser::dynamic_reconfigureConfig>::CallbackType dyn_server_cb;
+
       int mode_;
+      bool filter_;
       int sensor_number_;
 
-      SensorFusionApproach fusion_approach_;
+      ConsensusApproach consensus_approach_;
+      SensorFusionApproach default_approach_;
+      SensorFusionApproach* fusion_approach_;
   };
 
 }  // namespace collision_detector_diagnoser
