@@ -53,9 +53,15 @@ namespace collision_detector_diagnoser
      return fault_;
   }
 
-  void CollisionDetectorDiagnoser::twoSensorsCallBack(const fusion_msgs::sensorFusionMsgConstPtr& detector_1, const fusion_msgs::sensorFusionMsgConstPtr& detector_2){
-    ROS_INFO("Filtering");
-    if (detector_1->msg == fusion_msgs::sensorFusionMsg::ERROR  || detector_2->msg == fusion_msgs::sensorFusionMsg::ERROR){
+  void CollisionDetectorDiagnoser::twoSensorsCallBack(const fusion_msgs::sensorFusionMsgConstPtr& detector_1,
+                                                      const fusion_msgs::sensorFusionMsgConstPtr& detector_2){
+    ROS_INFO_ONCE("TwoSensors");
+    list <fusion_msgs::sensorFusionMsg> list;
+    fusion_msgs::sensorFusionMsg a = *detector_1;
+
+    list.push_back(a);
+
+    if(fusion_approach_.detect(list)){
       time_of_collision_ = detector_1->header; //TODO
       isCollisionDetected = true;
 
@@ -68,8 +74,13 @@ namespace collision_detector_diagnoser
   void CollisionDetectorDiagnoser::threeSensorsCallBack(const fusion_msgs::sensorFusionMsgConstPtr& detector_1,
                                                         const fusion_msgs::sensorFusionMsgConstPtr& detector_2,
                                                         const fusion_msgs::sensorFusionMsgConstPtr& detector_3){
-    ROS_INFO_ONCE("Filtering");
-    if (detector_1->msg == fusion_msgs::sensorFusionMsg::ERROR  || detector_2->msg == fusion_msgs::sensorFusionMsg::ERROR){
+    ROS_INFO_ONCE("Three Sensors");
+
+    list <fusion_msgs::sensorFusionMsg> list;
+    fusion_msgs::sensorFusionMsg a = *detector_1;
+    list.push_back(a);
+
+    if(fusion_approach_.detect(list)){
       time_of_collision_ = detector_1->header; //TODO
       isCollisionDetected = true;
 
@@ -175,5 +186,6 @@ namespace collision_detector_diagnoser
 
     fault_.cause_ = FaultTopology::MISLOCALIZATION;
     ROS_ERROR_ONCE("Collision FOUND");
+    isCollisionDetected = false;
   }
 }  // namespace collision_detector_diagnoser

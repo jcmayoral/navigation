@@ -17,7 +17,9 @@
 #include <footprint_checker/CollisionCheckerMsg.h>
 #include <dynamic_reconfigure/server.h>
 #include <collision_detector_diagnoser/dynamic_reconfigureConfig.h>
-
+#include <collision_detector_diagnoser/sync_policies.h>
+#include <collision_detector_diagnoser/sensor_fusion_methods.hpp>
+#include <list>
 
 namespace collision_detector_diagnoser
 {
@@ -86,23 +88,7 @@ namespace collision_detector_diagnoser
       std::vector<message_filters::Subscriber<fusion_msgs::sensorFusionMsg>*> filtered_subscribers_;
       //message_filters::Subscriber<fusion_msgs::sensorFusionMsg> *sub_0_;
       //message_filters::Subscriber<fusion_msgs::sensorFusionMsg> *sub_1_;
-      typedef message_filters::sync_policies::ApproximateTime<fusion_msgs::sensorFusionMsg,
-                                                              fusion_msgs::sensorFusionMsg> MySyncPolicy2;
 
-      typedef message_filters::sync_policies::ApproximateTime<fusion_msgs::sensorFusionMsg,
-                                                              fusion_msgs::sensorFusionMsg,
-                                                              fusion_msgs::sensorFusionMsg> MySyncPolicy3;
-
-      typedef message_filters::sync_policies::ApproximateTime<fusion_msgs::sensorFusionMsg,
-                                                              fusion_msgs::sensorFusionMsg,
-                                                              fusion_msgs::sensorFusionMsg,
-                                                              fusion_msgs::sensorFusionMsg> MySyncPolicy4;
-
-      typedef message_filters::sync_policies::ApproximateTime<fusion_msgs::sensorFusionMsg,
-                                                              fusion_msgs::sensorFusionMsg,
-                                                              fusion_msgs::sensorFusionMsg,
-                                                              fusion_msgs::sensorFusionMsg,
-                                                              fusion_msgs::sensorFusionMsg> MySyncPolicy5;
 
       message_filters::Synchronizer<MySyncPolicy2>*sync_;
 
@@ -114,6 +100,8 @@ namespace collision_detector_diagnoser
       dynamic_reconfigure::Server<collision_detector_diagnoser::dynamic_reconfigureConfig>::CallbackType dyn_server_cb;
       int mode_;
       int sensor_number_;
+
+      SensorFusionApproach fusion_approach_;
   };
 
 }  // namespace collision_detector_diagnoser
