@@ -104,8 +104,9 @@ namespace collision_detector_diagnoser
       int sensor_number_;
       double percentage_threshold_;
 
-      ConsensusApproach consensus_approach_;
       SensorFusionApproach default_approach_;
+      ConsensusApproach consensus_approach_;
+      WeightedApproach weighted_approach_;
       SensorFusionApproach* fusion_approach_;
   };
 

@@ -43,3 +43,24 @@ class ConsensusApproach : public SensorFusionApproach {
         return false;
       };
 };
+
+class WeightedApproach : public SensorFusionApproach {
+    public:
+      bool detect(list<fusion_msgs::sensorFusionMsg> v){
+        ROS_DEBUG("Consensus");
+        double max_value = v.size() * fusion_msgs::sensorFusionMsg::ERROR; //TODO
+        double count = 0;
+
+        for (std::list<fusion_msgs::sensorFusionMsg>::iterator it=v.begin(); it != v.end(); ++it){
+          count += it->msg * it->weight;
+        }
+
+        ROS_DEBUG_STREAM("Count " << count);
+        if ((count/max_value) >= threshold){
+          return true;
+
+        }
+
+        return false;
+      };
+};
