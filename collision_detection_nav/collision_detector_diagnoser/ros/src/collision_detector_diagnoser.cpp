@@ -123,7 +123,7 @@ namespace collision_detector_diagnoser
           filtered_subscribers_.clear();
         }//endIf
 
-        for (int i = 1; i< sensor_number_;i++){
+        for (int i = 0; i< sensor_number_;i++){
           ros::Subscriber sub = nh.subscribe("collisions_"+std::to_string(i), 10, &CollisionDetectorDiagnoser::simpleCallBack, this);
           array_subcribers_.push_back(sub);
         }//endFor
@@ -137,7 +137,7 @@ namespace collision_detector_diagnoser
 
       array_subcribers_.clear();
 
-      for(int i=1; i< sensor_number; i++){
+      for(int i=0; i< sensor_number; i++){
         filtered_subscribers_.push_back(new message_filters::Subscriber<fusion_msgs::sensorFusionMsg>(nh, "collisions_"+std::to_string(i), 10));
       }//endFor
 
