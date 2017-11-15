@@ -7,14 +7,13 @@ int main(int argc,char** argv){
 
   ros::init(argc, argv, "detector_diagnoser_node");
 
-  int sensor_number = 1;
+  int sensor_number = 4;
 
-  if (argc < 2 ){
-    ROS_INFO("Setting 1 sensor");
-  }
-  else{
+  if (argc >= 2 ){
     sensor_number = atoi(argv[1]);
   }
+
+  ROS_INFO_STREAM("Setting " << sensor_number << "sensors");
 
   CollisionDetectorDiagnoser* diagnoser_ = new CollisionDetectorDiagnoser(sensor_number);
 

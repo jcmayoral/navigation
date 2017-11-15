@@ -8,6 +8,11 @@ class SensorFusionApproach {
   public:
     virtual bool detect(list<fusion_msgs::sensorFusionMsg> v) {
       ROS_DEBUG("Default");
+      for (std::list<fusion_msgs::sensorFusionMsg>::iterator it=v.begin(); it != v.end(); ++it){
+        if(it->msg == fusion_msgs::sensorFusionMsg::ERROR){
+          return true;
+        }
+      }
       return false;
     };
   protected:

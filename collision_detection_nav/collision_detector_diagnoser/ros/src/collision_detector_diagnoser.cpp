@@ -96,6 +96,32 @@ namespace collision_detector_diagnoser
     }
   }
 
+  void CollisionDetectorDiagnoser::fourSensorsCallBack(const fusion_msgs::sensorFusionMsgConstPtr& detector_1,
+                                                        const fusion_msgs::sensorFusionMsgConstPtr& detector_2,
+                                                        const fusion_msgs::sensorFusionMsgConstPtr& detector_3,
+                                                        const fusion_msgs::sensorFusionMsgConstPtr& detector_4){
+    ROS_DEBUG("Four Sensors");
+
+    list <fusion_msgs::sensorFusionMsg> list;
+    fusion_msgs::sensorFusionMsg tmp = *detector_1;
+    list.push_back(tmp);
+    tmp = *detector_2;
+    list.push_back(tmp);
+    tmp = *detector_3;
+    list.push_back(tmp);
+    tmp = *detector_4;
+    list.push_back(tmp);
+
+    if(fusion_approach_->detect(list)){
+      time_of_collision_ = detector_1->header; //TODO
+      isCollisionDetected = true;
+
+    }
+    else{
+      isCollisionDetected = false;
+    }
+  }
+
   void CollisionDetectorDiagnoser::simpleCallBack(const fusion_msgs::sensorFusionMsg msg){
     ROS_INFO_ONCE("Simple Filtering");
     if (msg.msg == fusion_msgs::sensorFusionMsg::ERROR){
@@ -119,7 +145,7 @@ namespace collision_detector_diagnoser
           for(int i=0; i< sensor_number; i++){
             filtered_subscribers_.at(i)->unsubscribe();
           }//endFor
-          sync_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::twoSensorsCallBack,this,_1, _2));
+          sync_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::fourSensorsCallBack,this,_1, _2,_3,_4));//TODO
           filtered_subscribers_.clear();
         }//endIf
 
@@ -141,8 +167,11 @@ namespace collision_detector_diagnoser
         filtered_subscribers_.push_back(new message_filters::Subscriber<fusion_msgs::sensorFusionMsg>(nh, "collisions_"+std::to_string(i), 10));
       }//endFor
 
-      sync_ = new message_filters::Synchronizer<MySyncPolicy2>(MySyncPolicy2(10),*filtered_subscribers_.at(0), *filtered_subscribers_.at(1));
-      sync_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::twoSensorsCallBack,this,_1, _2));
+      sync_ = new message_filters::Synchronizer<MySyncPolicy4>(MySyncPolicy4(10),*filtered_subscribers_.at(0),
+                                                                                 *filtered_subscribers_.at(1),
+                                                                                 *filtered_subscribers_.at(2),
+                                                                                 *filtered_subscribers_.at(3)); //TODO
+      sync_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::fourSensorsCallBack,this,_1, _2,_3,_4));
     }//endElse
 
     //Swap betweenModes;

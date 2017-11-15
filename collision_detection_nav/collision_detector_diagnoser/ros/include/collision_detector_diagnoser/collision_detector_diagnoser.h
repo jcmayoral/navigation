@@ -71,6 +71,11 @@ namespace collision_detector_diagnoser
                                 const fusion_msgs::sensorFusionMsgConstPtr& detector_2,
                                 const fusion_msgs::sensorFusionMsgConstPtr& detector_3);
 
+      void fourSensorsCallBack(const fusion_msgs::sensorFusionMsgConstPtr& detector_1,
+                                const fusion_msgs::sensorFusionMsgConstPtr& detector_2,
+                                const fusion_msgs::sensorFusionMsgConstPtr& detector_3,
+                                const fusion_msgs::sensorFusionMsgConstPtr& detector_4);
+
       void simpleCallBack(const fusion_msgs::sensorFusionMsg msg);
 
       //void secondCallBack(const sensor_msgs::ImageConstPtr& msg1, const sensor_msgs::ImageConstPtr&  msg2);
@@ -85,7 +90,7 @@ namespace collision_detector_diagnoser
       std_msgs::Header time_of_collision_;
       std::vector<message_filters::Subscriber<fusion_msgs::sensorFusionMsg>*> filtered_subscribers_;
 
-      message_filters::Synchronizer<MySyncPolicy2>*sync_;
+      message_filters::Synchronizer<MySyncPolicy4>*sync_;
 
       ros::ServiceClient strength_srv_client_;
       ros::ServiceClient orientations_srv_client_;
