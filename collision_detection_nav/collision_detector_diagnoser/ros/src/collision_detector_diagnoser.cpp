@@ -12,7 +12,7 @@ using namespace message_filters;
 namespace collision_detector_diagnoser
 {
 
-  CollisionDetectorDiagnoser::CollisionDetectorDiagnoser(): isCollisionDetected(false), time_of_collision_(), mode_(0), sensor_number_(2), filter_(true)
+  CollisionDetectorDiagnoser::CollisionDetectorDiagnoser(): isCollisionDetected(false), time_of_collision_(), mode_(0), sensor_number_(2), filter_(true), percentage_threshold_(0.5)
   {
     ros::NodeHandle private_n;
     fault_.type_ =  FaultTopology::UNKNOWN_TYPE;
@@ -41,6 +41,7 @@ namespace collision_detector_diagnoser
     //ROS_INFO_STREAM(config.mode);
     mode_ = config.mode;
     filter_ = config.allow_filter;
+    percentage_threshold_ = config.percentage_threshold;
     initialize(sensor_number_);
   }
 
@@ -176,6 +177,10 @@ namespace collision_detector_diagnoser
 
     //Swap betweenModes;
     selectMode();
+
+    //Update Threshold
+    fusion_approach_->setThreshold(percentage_threshold_);
+
   }
 
   void CollisionDetectorDiagnoser::selectMode(){

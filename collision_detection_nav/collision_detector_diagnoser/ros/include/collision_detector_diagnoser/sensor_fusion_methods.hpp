@@ -15,6 +15,10 @@ class SensorFusionApproach {
       }
       return false;
     };
+    void setThreshold(double thr){
+      ROS_INFO("Threshold update");
+      threshold = thr;
+    }
   protected:
     double threshold = 0.5; //TODO
 };

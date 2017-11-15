@@ -102,6 +102,7 @@ namespace collision_detector_diagnoser
       int mode_;
       bool filter_;
       int sensor_number_;
+      double percentage_threshold_;
 
       ConsensusApproach consensus_approach_;
       SensorFusionApproach default_approach_;
