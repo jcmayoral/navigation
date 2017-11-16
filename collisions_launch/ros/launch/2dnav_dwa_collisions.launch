@@ -17,7 +17,7 @@
     <node pkg="footprint_checker" type="base_collision_checker_server" respawn="true" name="base_collision_checker" output="screen" />
 
     <!-- move_base navigation -->
-    <node pkg="move_base_fault_tolerant" type="move_base_fault_tolerant" respawn="true" name="move_base" output="screen">
+    <node pkg="move_base_fault_tolerant" type="move_base_fault_tolerant" respawn="true" name="move_base_fault" output="screen">
         <!-- Remap from cmd_vel to care-o-bot 3 base controller topics -->
         <remap from="cmd_vel" to="/base/twist_mux/command_navigation"/>
         <remap from="odom" to="base_controller/odometry"/>

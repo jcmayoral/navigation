@@ -12,7 +12,7 @@
 #include <kinetic_energy_monitor/KineticEnergyMonitorMsg.h>
 #include <footprint_checker/CollisionCheckerMsg.h>
 #include <dynamic_reconfigure/server.h>
-#include <collision_detector_diagnoser/dynamic_reconfigureConfig.h>
+#include <collision_detector_diagnoser/diagnoserConfig.h>
 #include <collision_detector_diagnoser/sync_policies.h>
 #include <collision_detector_diagnoser/sensor_fusion_methods.hpp>
 #include <list>
@@ -80,7 +80,7 @@ namespace collision_detector_diagnoser
 
       //void secondCallBack(const sensor_msgs::ImageConstPtr& msg1, const sensor_msgs::ImageConstPtr&  msg2);
       //void thirdCallBack(const geometry_msgs::AccelStamped::ConstPtr& msg);
-      void dyn_reconfigureCB(collision_detector_diagnoser::dynamic_reconfigureConfig &config, uint32_t level);
+      void dyn_reconfigureCB(collision_detector_diagnoser::diagnoserConfig &config, uint32_t level);
 
       void selectMode();
 
@@ -96,8 +96,8 @@ namespace collision_detector_diagnoser
       ros::ServiceClient orientations_srv_client_;
 
       //Dynamic Reconfigure
-      dynamic_reconfigure::Server<collision_detector_diagnoser::dynamic_reconfigureConfig> dyn_server;
-      dynamic_reconfigure::Server<collision_detector_diagnoser::dynamic_reconfigureConfig>::CallbackType dyn_server_cb;
+      dynamic_reconfigure::Server<collision_detector_diagnoser::diagnoserConfig> dyn_server;
+      dynamic_reconfigure::Server<collision_detector_diagnoser::diagnoserConfig>::CallbackType dyn_server_cb;
 
       int mode_;
       bool filter_;

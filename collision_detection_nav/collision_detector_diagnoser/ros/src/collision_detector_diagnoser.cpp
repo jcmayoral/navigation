@@ -12,19 +12,19 @@ using namespace message_filters;
 namespace collision_detector_diagnoser
 {
 
-  CollisionDetectorDiagnoser::CollisionDetectorDiagnoser(): isCollisionDetected(false), time_of_collision_(), mode_(0), sensor_number_(2), filter_(true), percentage_threshold_(0.5)
+  CollisionDetectorDiagnoser::CollisionDetectorDiagnoser(): isCollisionDetected(false), time_of_collision_(), mode_(0), sensor_number_(4), filter_(false), percentage_threshold_(0.5)
   {
-    ros::NodeHandle private_n;
-    fault_.type_ =  FaultTopology::UNKNOWN_TYPE;
-    fault_.cause_ = FaultTopology::UNKNOWN;
-    strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("kinetic_energy_drop");
-    orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("collision_checker");
+    //ros::NodeHandle private_n;
+    //fault_.type_ =  FaultTopology::UNKNOWN_TYPE;
+    //fault_.cause_ = FaultTopology::UNKNOWN;
+    //strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("kinetic_energy_drop");
+    //orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("collision_checker");
     dyn_server_cb = boost::bind(&CollisionDetectorDiagnoser::dyn_reconfigureCB, this, _1, _2);
     dyn_server.setCallback(dyn_server_cb);
     ROS_INFO("Default Constructor CollisionDetectorDiagnoser");
   }
 
-  CollisionDetectorDiagnoser::CollisionDetectorDiagnoser(int sensor_number): isCollisionDetected(false), time_of_collision_(), mode_(0), sensor_number_(sensor_number), filter_(true)
+  CollisionDetectorDiagnoser::CollisionDetectorDiagnoser(int sensor_number): isCollisionDetected(false), time_of_collision_(), mode_(0), sensor_number_(sensor_number), filter_(false)
   {
     ros::NodeHandle private_n;
     fault_.type_ =  FaultTopology::UNKNOWN_TYPE;
@@ -37,8 +37,8 @@ namespace collision_detector_diagnoser
     ROS_INFO("Constructor CollisionDetectorDiagnoser");
   }
 
-  void CollisionDetectorDiagnoser::dyn_reconfigureCB(collision_detector_diagnoser::dynamic_reconfigureConfig &config, uint32_t level){
-    //ROS_INFO_STREAM(config.mode);
+  void CollisionDetectorDiagnoser::dyn_reconfigureCB(collision_detector_diagnoser::diagnoserConfig &config, uint32_t level){
+    //<ROS_INFO_STREAM(config.mode);
     mode_ = config.mode;
     filter_ = config.allow_filter;
     percentage_threshold_ = config.percentage_threshold;
@@ -138,7 +138,8 @@ namespace collision_detector_diagnoser
   void CollisionDetectorDiagnoser::initialize(int sensor_number)
   {
     ros::NodeHandle nh;
-    ROS_INFO_STREAM("initializing " << sensor_number_ << " sensors");
+    sensor_number_ = sensor_number;
+    ROS_INFO_STREAM("initializing " << sensor_number << " sensors");
     ROS_INFO_STREAM("Method" << std::to_string(mode_) << " Selected");
 
     if(!filter_){
@@ -150,7 +151,7 @@ namespace collision_detector_diagnoser
           filtered_subscribers_.clear();
         }//endIf
 
-        for (int i = 0; i< sensor_number_;i++){
+        for (int i = 0; i< sensor_number;i++){
           ros::Subscriber sub = nh.subscribe("collisions_"+std::to_string(i), 10, &CollisionDetectorDiagnoser::simpleCallBack, this);
           array_subcribers_.push_back(sub);
         }//endFor
