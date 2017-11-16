@@ -21,27 +21,35 @@ namespace collision_detector_diagnoser
     //orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("collision_checker");
     //dyn_server_cb = boost::bind(&CollisionDetectorDiagnoser::dyn_reconfigureCB, this, _1, _2);
     //dyn_server.setCallback(dyn_server_cb);
-    ros::NodeHandle private_n;
+    ros::NodeHandle private_n("~");
     fault_.type_ =  FaultTopology::UNKNOWN_TYPE;
     fault_.cause_ = FaultTopology::UNKNOWN;
     strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("kinetic_energy_drop");
     orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("collision_checker");
-    //dyn_server = dynamic_reconfigure::Server<collision_detector_diagnoser::diagnoserConfig>(private_n);
+
+    private_n.param("sensor_fusion/sensor_number", sensor_number_, 1);
+    private_n.param("sensor_fusion/mode", mode_, 1);
+    private_n.param("sensor_fusion/filter", filter_, true);
+    ROS_INFO_STREAM("mode" << mode_);
+    /*
+    dyn_server = new dynamic_reconfigure::Server<collision_detector_diagnoser::diagnoserConfig>(private_n);
     dyn_server_cb = boost::bind(&CollisionDetectorDiagnoser::dyn_reconfigureCB, this, _1, _2);
-    dyn_server.setCallback(dyn_server_cb);
+    dyn_server->setCallback(dyn_server_cb);
+    */
     ROS_INFO("Default Constructor CollisionDetectorDiagnoser");
   }
 
   CollisionDetectorDiagnoser::CollisionDetectorDiagnoser(int sensor_number): isCollisionDetected(false), time_of_collision_(), mode_(0), sensor_number_(sensor_number), filter_(false)
   {
-    ros::NodeHandle private_n;
+    //Used In teh Node
+    ros::NodeHandle private_n("~");
     fault_.type_ =  FaultTopology::UNKNOWN_TYPE;
     fault_.cause_ = FaultTopology::UNKNOWN;
     strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("kinetic_energy_drop");
     orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("collision_checker");
-    //dyn_server = dynamic_reconfigure::Server<collision_detector_diagnoser::diagnoserConfig>(private_n);
+    dyn_server = new dynamic_reconfigure::Server<collision_detector_diagnoser::diagnoserConfig>(private_n);
     dyn_server_cb = boost::bind(&CollisionDetectorDiagnoser::dyn_reconfigureCB, this, _1, _2);
-    dyn_server.setCallback(dyn_server_cb);
+    dyn_server->setCallback(dyn_server_cb);
     //initialize();
     ROS_INFO("Constructor CollisionDetectorDiagnoser");
   }

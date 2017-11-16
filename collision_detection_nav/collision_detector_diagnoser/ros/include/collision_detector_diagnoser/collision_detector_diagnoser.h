@@ -96,7 +96,7 @@ namespace collision_detector_diagnoser
       ros::ServiceClient orientations_srv_client_;
 
       //Dynamic Reconfigure
-      dynamic_reconfigure::Server<collision_detector_diagnoser::diagnoserConfig> dyn_server;
+      dynamic_reconfigure::Server<collision_detector_diagnoser::diagnoserConfig>* dyn_server;
       dynamic_reconfigure::Server<collision_detector_diagnoser::diagnoserConfig>::CallbackType dyn_server_cb;
 
       int mode_;
