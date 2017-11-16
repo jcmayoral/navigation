@@ -33,6 +33,7 @@ fault_detector: collision_detector_diagnoser/CollisionDetectorDiagnoser
 
 sensor_fusion:
     sensor_number: 4
+    mode: 3
 
 fault_recovery_behaviors:
   - name: 'simple_collision_recovery'
