@@ -31,6 +31,7 @@ namespace collision_detector_diagnoser
     private_n.param("sensor_fusion/mode", mode_, 1);
     private_n.param("sensor_fusion/filter", filter_, true);
     ROS_INFO_STREAM("mode" << mode_);
+    initialize(sensor_number_);
     /*
     dyn_server = new dynamic_reconfigure::Server<collision_detector_diagnoser::diagnoserConfig>(private_n);
     dyn_server_cb = boost::bind(&CollisionDetectorDiagnoser::dyn_reconfigureCB, this, _1, _2);
