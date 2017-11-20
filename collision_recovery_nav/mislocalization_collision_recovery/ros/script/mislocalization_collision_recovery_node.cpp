@@ -15,8 +15,8 @@ int main(int argc,char** argv){
       ROS_INFO("DONE");
       return 1;
     }
-    //diagnoser_.isolateFault();
     ros::spinOnce(); // the missing call
+    //diagnoser_.isolateFault();
   }
 
   return 1;

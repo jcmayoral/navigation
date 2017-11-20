@@ -18,16 +18,16 @@ namespace mislocalization_collision_recovery
     amcl_client_ = n.serviceClient<std_srvs::Empty>("/request_nomotion_update");
     clear_costmaps_client_ = n.serviceClient<std_srvs::Empty>("/move_base/clear_costmaps");
 
-    amcl_sub_ = n.subscribe("/amcl_pose", 1, &MisLocalizationCollisionRecovery::amclCB,this);
+    amcl_sub_ = n.subscribe("/amcl_pose", 10, &MisLocalizationCollisionRecovery::amclCB,this);
 
     n.getParam("/mislocalization_threshold", threshold_);
     ROS_INFO("Constructor MisLocalizationCollisionRecovery");
+    ros::spinOnce(); // the missing call
   }
 
   void MisLocalizationCollisionRecovery::amclCB(const geometry_msgs::PoseWithCovarianceStampedConstPtr& msg){
     amcl_pose_ = *msg;
     is_pose_received_ = true;
-
   }
 
   MisLocalizationCollisionRecovery::~MisLocalizationCollisionRecovery()
@@ -49,6 +49,7 @@ namespace mislocalization_collision_recovery
 
     std_srvs::Empty s;
 
+
     //clear_costmaps
     if (ros::service::waitForService ("/move_base/clear_costmaps", 100)) {
       if(!clear_costmaps_client_.call(s)) {
@@ -65,12 +66,11 @@ namespace mislocalization_collision_recovery
       }
 
       int step = 0;
-      bool isFinished = false;
-
+      double current_var = threshold_ + 1.0;
       //Force update of the particle filter
       ros::service::waitForService ("/request_nomotion_update", 100);
 
-      while((!isFinished) && step < max_iterations_){ //TODO
+      while(current_var > threshold_ && step < max_iterations_){ //TODO
         if(!amcl_client_.call(s)){
           ROS_ERROR("Resample Error");
           return false;
@@ -78,10 +78,10 @@ namespace mislocalization_collision_recovery
         step++;
 
         ros::Duration(0.1).sleep();
-
-        isFinished = fabs(amcl_pose_.pose.covariance[0] < threshold_) &&
-                     fabs(amcl_pose_.pose.covariance[7] < threshold_) &&
-                     fabs(amcl_pose_.pose.covariance[35] < threshold_);
+        ROS_INFO_STREAM(current_var);
+        current_var = sqrt(pow(amcl_pose_.pose.covariance[0],2) +
+                           pow(amcl_pose_.pose.covariance[7],2) +
+                           pow(amcl_pose_.pose.covariance[35],2));
       }
       if (step == max_iterations_){
         ROS_ERROR("Max Number of Iterations Reached");
