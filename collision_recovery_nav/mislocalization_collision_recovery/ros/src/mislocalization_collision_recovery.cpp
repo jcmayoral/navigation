@@ -66,11 +66,10 @@ namespace mislocalization_collision_recovery
       }
 
       int step = 0;
-      double current_var = threshold_ + 1.0;
-      //Force update of the particle filter
+      bool ready = false;      //Force update of the particle filter
       ros::service::waitForService ("/request_nomotion_update", 100);
 
-      while(current_var > threshold_ && step < max_iterations_){ //TODO
+      while((!ready) && step < max_iterations_){ //TODO
         if(!amcl_client_.call(s)){
           ROS_ERROR("Resample Error");
           return false;
@@ -78,10 +77,10 @@ namespace mislocalization_collision_recovery
         step++;
 
         ros::Duration(0.1).sleep();
-        ROS_INFO_STREAM(current_var);
-        current_var = sqrt(pow(amcl_pose_.pose.covariance[0],2) +
-                           pow(amcl_pose_.pose.covariance[7],2) +
-                           pow(amcl_pose_.pose.covariance[35],2));
+        ROS_INFO_STREAM(ready);
+        ready = fabs(amcl_pose_.pose.covariance[0]) < threshold_ &&
+                fabs(amcl_pose_.pose.covariance[7]) < threshold_ &&
+                fabs(amcl_pose_.pose.covariance[35]) < threshold_;
       }
       if (step == max_iterations_){
         ROS_ERROR("Max Number of Iterations Reached");
