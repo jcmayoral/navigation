@@ -10,7 +10,11 @@ int main(int argc,char** argv){
   MisLocalizationCollisionRecovery* strategy = new MisLocalizationCollisionRecovery();
 
   while(ros::ok()){
-    while(!strategy->runFaultBehavior());
+
+    if(strategy->runFaultBehavior()){
+      ROS_INFO("DONE");
+      return 1;
+    }
     //diagnoser_.isolateFault();
     ros::spinOnce(); // the missing call
   }
