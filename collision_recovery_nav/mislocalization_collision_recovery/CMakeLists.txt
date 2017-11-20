@@ -28,12 +28,25 @@ catkin_package(
 )
 
 add_library(mislocalization_collision_recovery ros/src/mislocalization_collision_recovery.cpp)
+
+add_executable(mislocalization_collision_recovery_node
+  ros/script/mislocalization_collision_recovery_node.cpp
+)
+
 target_link_libraries(mislocalization_collision_recovery ${catkin_LIBRARIES})
+target_link_libraries(mislocalization_collision_recovery_node mislocalization_collision_recovery)
+
+add_dependencies(mislocalization_collision_recovery_node mislocalization_collision_recovery)
 
 ### INSTALLS
 install(TARGETS mislocalization_collision_recovery
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+install(TARGETS
+  mislocalization_collision_recovery_node
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 install(FILES fault_plugin.xml
