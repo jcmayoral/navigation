@@ -10,7 +10,7 @@ using namespace fault_core;
 namespace mislocalization_collision_recovery
 {
 
-  MisLocalizationCollisionRecovery::MisLocalizationCollisionRecovery(): amcl_pose_(), is_pose_received_(false), threshold_(2.0), max_iterations_(100)
+  MisLocalizationCollisionRecovery::MisLocalizationCollisionRecovery(): amcl_pose_(), is_pose_received_(false), threshold_(4.0), max_iterations_(100)
   {
     fault_cause_ = FaultTopology::MISLOCALIZATION;
     ros::NodeHandle n;
@@ -43,7 +43,7 @@ namespace mislocalization_collision_recovery
   bool MisLocalizationCollisionRecovery::runFaultBehavior()
   {
     if (!is_pose_received_){
-      ROS_ERROR("Localization not received");
+      ROS_ERROR_ONCE("Localization not received");
       return false;
     }
 
@@ -75,6 +75,7 @@ namespace mislocalization_collision_recovery
           ROS_ERROR("Resample Error");
           return false;
         }
+        step++;
 
         ros::Duration(0.1).sleep();
 
@@ -84,7 +85,6 @@ namespace mislocalization_collision_recovery
       }
       if (step == max_iterations_){
         ROS_ERROR("Max Number of Iterations Reached");
-        return false;
       }
     }
     return true;
