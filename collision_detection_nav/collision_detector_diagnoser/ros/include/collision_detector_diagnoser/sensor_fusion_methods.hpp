@@ -1,6 +1,7 @@
 #include <list>
 #include <ros/ros.h>
 #include <fusion_msgs/sensorFusionMsg.h>
+#include <std_msgs/Float32.h>
 
 using namespace std;
 
@@ -69,11 +70,16 @@ class KalmanFilterApproach : public SensorFusionApproach {
     public:
       bool detect(list<fusion_msgs::sensorFusionMsg> v){
         ROS_DEBUG("Kalman Filter");
-
+        std::vector<float> x(v.size());
         for (std::list<fusion_msgs::sensorFusionMsg>::iterator it=v.begin(); it != v.end(); ++it){
-
+          for(int i = 0; i < it->data.size(); i++){
+            x[i] = it->data[i]; // initialize x (measured)
+          }
         }
-  
+        p = x;
         return false;
       };
+
+    private:
+      std::vector<float> p;
 };
