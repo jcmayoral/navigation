@@ -64,3 +64,16 @@ class WeightedApproach : public SensorFusionApproach {
         return false;
       };
 };
+
+class KalmanFilterApproach : public SensorFusionApproach {
+    public:
+      bool detect(list<fusion_msgs::sensorFusionMsg> v){
+        ROS_DEBUG("Kalman Filter");
+
+        for (std::list<fusion_msgs::sensorFusionMsg>::iterator it=v.begin(); it != v.end(); ++it){
+
+        }
+  
+        return false;
+      };
+};

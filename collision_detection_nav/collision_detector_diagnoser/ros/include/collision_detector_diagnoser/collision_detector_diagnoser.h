@@ -107,6 +107,8 @@ namespace collision_detector_diagnoser
       SensorFusionApproach default_approach_;
       ConsensusApproach consensus_approach_;
       WeightedApproach weighted_approach_;
+      KalmanFilterApproach kalman_approach_;
+
       SensorFusionApproach* fusion_approach_;
   };
 

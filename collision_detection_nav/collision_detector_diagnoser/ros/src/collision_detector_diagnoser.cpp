@@ -207,6 +207,7 @@ namespace collision_detector_diagnoser
       case 0: fusion_approach_ = &default_approach_; break;
       case 1: fusion_approach_ = &consensus_approach_; break;
       case 2: fusion_approach_ = &weighted_approach_; break;
+      case 3: fusion_approach_ = &kalman_approach_; break;
       default: ROS_ERROR_STREAM("selecMode Error with code "<< mode_);break;
     }//endSwitch
   }
