@@ -12,6 +12,25 @@ using namespace message_filters;
 namespace collision_detector_diagnoser
 {
 
+  void CollisionDetectorDiagnoser::plotOrientation(list<fusion_msgs::sensorFusionMsg> v){
+    cout << "hlh";
+    ROS_ERROR("HERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
+    geometry_msgs::PoseArray array_msg;
+
+    for (std::list<fusion_msgs::sensorFusionMsg>::iterator it=v.begin(); it != v.end(); ++it){
+      geometry_msgs::Pose pose;
+      pose.orientation = tf::createQuaternionMsgFromYaw (it->angle);
+      array_msg.poses.push_back(pose);
+      //if(it->msg == fusion_msgs::sensorFusionMsg::ERROR){
+      //  return true;
+      //}
+    }
+
+    orientation_pub_.publish(array_msg);
+
+  }
+
+
   CollisionDetectorDiagnoser::CollisionDetectorDiagnoser(): isCollisionDetected(false), time_of_collision_(), mode_(0), sensor_number_(4), filter_(false), percentage_threshold_(0.5)
   {
     //ros::NodeHandle private_n;
@@ -83,6 +102,7 @@ namespace collision_detector_diagnoser
     list.push_back(tmp);
 
     if(fusion_approach_->detect(list)){
+      plotOrientation(list);
       time_of_collision_ = detector_1->header; //TODO
       isCollisionDetected = true;
 
@@ -106,6 +126,7 @@ namespace collision_detector_diagnoser
     list.push_back(tmp);
 
     if(fusion_approach_->detect(list)){
+      plotOrientation(list);
       time_of_collision_ = detector_1->header; //TODO
       isCollisionDetected = true;
 
@@ -132,6 +153,7 @@ namespace collision_detector_diagnoser
     list.push_back(tmp);
 
     if(fusion_approach_->detect(list)){
+      plotOrientation(list);
       time_of_collision_ = detector_1->header; //TODO
       isCollisionDetected = true;
 
@@ -142,7 +164,7 @@ namespace collision_detector_diagnoser
   }
 
   void CollisionDetectorDiagnoser::simpleCallBack(const fusion_msgs::sensorFusionMsg msg){
-    ROS_INFO_ONCE("Simple Filtering");
+    ROS_INFO("Simple Filtering");
     if (msg.msg == fusion_msgs::sensorFusionMsg::ERROR){
       time_of_collision_ = msg.header;
       isCollisionDetected = true;
@@ -200,6 +222,10 @@ namespace collision_detector_diagnoser
     //Update Threshold
     fusion_approach_->setThreshold(percentage_threshold_);
 
+
+    orientation_pub_ = nh.advertise<geometry_msgs::PoseArray>("measured_collision_orientations", 1);
+
+
   }
 
   void CollisionDetectorDiagnoser::selectMode(){
@@ -214,7 +240,7 @@ namespace collision_detector_diagnoser
 
   bool CollisionDetectorDiagnoser::detectFault()
   {
-    ROS_DEBUG("SimpleCollisionDetector Detect Fault");
+    //ROS_DEBUG("SimpleCollisionDetector Detect Fault");
     //if (isCollisionDetected){
     // isolateFault();
     //}

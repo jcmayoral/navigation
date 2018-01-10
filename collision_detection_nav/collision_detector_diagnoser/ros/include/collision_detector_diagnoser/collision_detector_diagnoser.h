@@ -84,6 +84,9 @@ namespace collision_detector_diagnoser
 
       void selectMode();
 
+
+      void plotOrientation(list<fusion_msgs::sensorFusionMsg> v);
+
     private:
       std::vector<ros::Subscriber> array_subcribers_;
       bool isCollisionDetected;
@@ -110,6 +113,10 @@ namespace collision_detector_diagnoser
       KalmanFilterApproach kalman_approach_;
 
       SensorFusionApproach* fusion_approach_;
+
+      //Collision Orientations from sensors
+      ros::Publisher orientation_pub_;
+
   };
 
 }  // namespace collision_detector_diagnoser

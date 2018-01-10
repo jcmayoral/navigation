@@ -48,7 +48,7 @@ class ConsensusApproach : public SensorFusionApproach {
 class WeightedApproach : public SensorFusionApproach {
     public:
       bool detect(list<fusion_msgs::sensorFusionMsg> v){
-        ROS_DEBUG("Consensus");
+        ROS_DEBUG("Weighted");
         double max_value = v.size() * fusion_msgs::sensorFusionMsg::ERROR; //TODO
         double count = 0;
 
@@ -70,7 +70,8 @@ class KalmanFilterApproach : public SensorFusionApproach {
     public:
 
       bool detect(list<fusion_msgs::sensorFusionMsg> v){
-        ROS_DEBUG("Kalman Filter");
+        cout << "hglglg";
+        ROS_INFO("Kalman Filter");
         // Based on http://www.ece.montana.edu/seniordesign/archive/SP14/UnderwaterNavigation/kalman_filter.html
         std::vector<float> z(v.size());
         for (std::list<fusion_msgs::sensorFusionMsg>::iterator it=v.begin(); it != v.end(); ++it){
