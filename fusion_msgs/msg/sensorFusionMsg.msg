@@ -7,3 +7,4 @@ byte WARN=1
 byte ERROR=2
 byte msg
 float32[] data
+float32 angle
