@@ -4,7 +4,7 @@
 
   <!-- Sensor 0 Cam -->
   <include file="$(find vision_utils_ros)/launch/collision_detection.launch">
-    <arg name="sensor_id" value="cam_1" />
+    <arg name="sensor_id" value="cam_0" />
     <arg name="sensor_number" value="0" />
   </include>
 
@@ -15,14 +15,14 @@
   </include>
 
   <!-- Sensor 2-->
-  <include file="$(find laser_detection_ros)/launch/collision_detection.launch">
-    <arg name="sensor_id" value="lidar_1"/>
+  <include file="$(find microphone_monitoring)/launch/collision_detection.launch">
+    <arg name="sensor_id" value="mic_1"/>
     <arg name="sensor_number" value="2"/>
   </include>
 
-  <!-- Sensor 3-->
-  <include file="$(find microphone_monitoring)/launch/collision_detection.launch">
-    <arg name="sensor_id" value="mic_1"/>
+  <!-- Sensor 3 LiDar tooo slow -->
+  <include file="$(find laser_detection_ros)/launch/collision_detection.launch">
+    <arg name="sensor_id" value="lidar_1"/>
     <arg name="sensor_number" value="3"/>
   </include>
 
