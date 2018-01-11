@@ -13,9 +13,8 @@ namespace collision_detector_diagnoser
 {
 
   void CollisionDetectorDiagnoser::plotOrientation(list<fusion_msgs::sensorFusionMsg> v){
-    cout << "hlh";
-    ROS_ERROR("HERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
     geometry_msgs::PoseArray array_msg;
+    array_msg.header.frame_id = "base_link";
 
     for (std::list<fusion_msgs::sensorFusionMsg>::iterator it=v.begin(); it != v.end(); ++it){
       geometry_msgs::Pose pose;
@@ -164,7 +163,21 @@ namespace collision_detector_diagnoser
   }
 
   void CollisionDetectorDiagnoser::simpleCallBack(const fusion_msgs::sensorFusionMsg msg){
-    ROS_INFO("Simple Filtering");
+    ROS_DEBUG("Simple Filtering");
+
+    list <fusion_msgs::sensorFusionMsg> list;
+    fusion_msgs::sensorFusionMsg tmp = msg;
+    list.push_back(msg);
+
+    //FOR TESTING
+    ROS_INFO("here");
+    if(fusion_approach_->detect(list)){
+      ROS_INFO("IN");
+      plotOrientation(list);
+
+    }
+    //end for testing
+
     if (msg.msg == fusion_msgs::sensorFusionMsg::ERROR){
       time_of_collision_ = msg.header;
       isCollisionDetected = true;
