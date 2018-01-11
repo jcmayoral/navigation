@@ -170,9 +170,7 @@ namespace collision_detector_diagnoser
     list.push_back(msg);
 
     //FOR TESTING
-    ROS_INFO("here");
     if(fusion_approach_->detect(list)){
-      ROS_INFO("IN");
       plotOrientation(list);
 
     }
