@@ -11,8 +11,12 @@ find_package(catkin REQUIRED
         fault_core
         )
 
+find_package(OpenCV REQUIRED)
+
 include_directories(ros/include
-                    ${catkin_INCLUDE_DIRS})
+                    ${catkin_INCLUDE_DIRS}
+                    ${OpenCV_INCLUDE_DIRS} )
+
 
 catkin_package(
     INCLUDE_DIRS
