@@ -32,4 +32,10 @@
     <arg name="sensor_number" value="4"/>
   </include>
 
+  <!-- Sensor 5-->
+  <include file="$(find odom_monitoring)/launch/collision_detection.launch">
+    <arg name="sensor_id" value="odom"/>
+    <arg name="sensor_number" value="5"/>
+  </include>
+
 </launch>
