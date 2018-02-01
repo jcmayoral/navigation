@@ -66,6 +66,9 @@ namespace collision_detector_diagnoser
     fault_.cause_ = FaultTopology::UNKNOWN;
     strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("kinetic_energy_drop");
     orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("collision_checker");
+    speak_pub_ = private_n.advertise<std_msgs::String>("say",1);
+    orientation_pub_ = private_n.advertise<geometry_msgs::PoseArray>("measured_collision_orientations", 1);
+
     dyn_server = new dynamic_reconfigure::Server<collision_detector_diagnoser::diagnoserConfig>(private_n);
     dyn_server_cb = boost::bind(&CollisionDetectorDiagnoser::dyn_reconfigureCB, this, _1, _2);
     dyn_server->setCallback(dyn_server_cb);
@@ -233,10 +236,6 @@ namespace collision_detector_diagnoser
     //Update Threshold
     fusion_approach_->setThreshold(percentage_threshold_);
 
-
-    orientation_pub_ = nh.advertise<geometry_msgs::PoseArray>("measured_collision_orientations", 1);
-
-
   }
 
   void CollisionDetectorDiagnoser::selectMode(){
@@ -261,6 +260,10 @@ namespace collision_detector_diagnoser
   void CollisionDetectorDiagnoser::isolateFault(){
 
     footprint_checker::CollisionCheckerMsg srv;
+
+    std_msgs::String msg;
+    msg.data ="ouch";
+    speak_pub_.publish(msg);
 
     if(orientations_srv_client_.call(srv)){
       ROS_INFO("Orientations Computed Correctly");

@@ -91,6 +91,9 @@ namespace collision_detector_diagnoser
       std::vector<ros::Subscriber> array_subcribers_;
       bool isCollisionDetected;
       std_msgs::Header time_of_collision_;
+
+      ros::Publisher speak_pub_;
+
       std::vector<message_filters::Subscriber<fusion_msgs::sensorFusionMsg>*> filtered_subscribers_;
 
       message_filters::Synchronizer<MySyncPolicy4>*sync_;
