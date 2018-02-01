@@ -96,7 +96,7 @@ namespace collision_detector_diagnoser
 
       std::vector<message_filters::Subscriber<fusion_msgs::sensorFusionMsg>*> filtered_subscribers_;
 
-      message_filters::Synchronizer<MySyncPolicy4>*sync_;
+      message_filters::Synchronizer<MySyncPolicy2>*sync_;
 
       ros::ServiceClient strength_srv_client_;
       ros::ServiceClient orientations_srv_client_;

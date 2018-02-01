@@ -45,6 +45,8 @@ namespace collision_detector_diagnoser
     strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("kinetic_energy_drop");
     orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("collision_checker");
     speak_pub_ = private_n.advertise<std_msgs::String>("say",1);
+    while (speak_pub_.getNumSubscribers() < 1);
+
     orientation_pub_ = private_n.advertise<geometry_msgs::PoseArray>("measured_collision_orientations", 1);
 
     private_n.param("sensor_fusion/sensor_number", sensor_number_, 1);
@@ -68,7 +70,8 @@ namespace collision_detector_diagnoser
     fault_.cause_ = FaultTopology::UNKNOWN;
     strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("kinetic_energy_drop");
     orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("collision_checker");
-    speak_pub_ = private_n.advertise<std_msgs::String>("say",1);
+    speak_pub_ = private_n.advertise<std_msgs::String>("/say",1);
+    while (speak_pub_.getNumSubscribers() < 1);
     orientation_pub_ = private_n.advertise<geometry_msgs::PoseArray>("measured_collision_orientations", 1);
 
     dyn_server = new dynamic_reconfigure::Server<collision_detector_diagnoser::diagnoserConfig>(private_n);
@@ -203,7 +206,7 @@ namespace collision_detector_diagnoser
           for(int i=0; i< sensor_number; i++){
             filtered_subscribers_.at(i)->unsubscribe();
           }//endFor
-          sync_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::fourSensorsCallBack,this,_1, _2,_3,_4));//TODO
+          sync_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::twoSensorsCallBack,this,_1, _2));//,_3,_4));//TODO
           filtered_subscribers_.clear();
         }//endIf
 
@@ -225,11 +228,10 @@ namespace collision_detector_diagnoser
         filtered_subscribers_.push_back(new message_filters::Subscriber<fusion_msgs::sensorFusionMsg>(nh, "collisions_"+std::to_string(i), 10));
       }//endFor
 
-      sync_ = new message_filters::Synchronizer<MySyncPolicy4>(MySyncPolicy4(10),*filtered_subscribers_.at(0),
-                                                                                 *filtered_subscribers_.at(1),
-                                                                                 *filtered_subscribers_.at(2),
-                                                                                 *filtered_subscribers_.at(3)); //TODO
-      sync_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::fourSensorsCallBack,this,_1, _2,_3,_4));
+      sync_ = new message_filters::Synchronizer<MySyncPolicy2>(MySyncPolicy2(10),*filtered_subscribers_.at(0),
+                                                                                 *filtered_subscribers_.at(1)
+                                                                                 ); //TODO
+      sync_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::twoSensorsCallBack,this,_1, _2));
     }//endElse
 
     //Swap betweenModes;
