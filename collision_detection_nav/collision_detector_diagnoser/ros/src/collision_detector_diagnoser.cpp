@@ -267,6 +267,8 @@ namespace collision_detector_diagnoser
     msg.data ="ouch";
     speak_pub_.publish(msg);
 
+    std::cout << "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh";
+
     if(orientations_srv_client_.call(srv)){
       ROS_INFO("Orientations Computed Correctly");
     }
