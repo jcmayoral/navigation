@@ -44,8 +44,11 @@ namespace collision_detector_diagnoser
     fault_.cause_ = FaultTopology::UNKNOWN;
     strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("kinetic_energy_drop");
     orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("collision_checker");
-    speak_pub_ = private_n.advertise<std_msgs::String>("say",1);
-    while (speak_pub_.getNumSubscribers() < 1);
+    speak_pub_ = private_n.advertise<std_msgs::String>("/say",1);
+    
+    while (speak_pub_.getNumSubscribers() < 1){
+      ROS_INFO_ONCE("Waiting Subscriber for say server");
+    }
 
     orientation_pub_ = private_n.advertise<geometry_msgs::PoseArray>("measured_collision_orientations", 1);
 
@@ -71,7 +74,10 @@ namespace collision_detector_diagnoser
     strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("kinetic_energy_drop");
     orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("collision_checker");
     speak_pub_ = private_n.advertise<std_msgs::String>("/say",1);
-    while (speak_pub_.getNumSubscribers() < 1);
+    while (speak_pub_.getNumSubscribers() < 1){
+      ROS_INFO_ONCE("Waiting Subscriber for say server");
+    }
+
     orientation_pub_ = private_n.advertise<geometry_msgs::PoseArray>("measured_collision_orientations", 1);
 
     dyn_server = new dynamic_reconfigure::Server<collision_detector_diagnoser::diagnoserConfig>(private_n);
