@@ -11,6 +11,7 @@ class SensorFusionApproach {
       ROS_DEBUG("Default");
       for (std::list<fusion_msgs::sensorFusionMsg>::iterator it=v.begin(); it != v.end(); ++it){
         if(it->msg == fusion_msgs::sensorFusionMsg::ERROR){
+          ROS_WARN_STREAM("Collision DETECTED on " << it->sensor_id);
           return true;
         }
       }
