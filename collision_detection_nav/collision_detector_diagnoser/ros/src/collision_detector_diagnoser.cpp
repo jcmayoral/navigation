@@ -274,12 +274,12 @@ namespace collision_detector_diagnoser
     if(!filter_){//Switching to unfiltered
 
         if (!filtered_subscribers_.empty()){
-          unregisterCallbackForSyncronizers(); // reset all syncronizers
 
           for(int i=0; i< filtered_subscribers_.size(); i++){
             filtered_subscribers_.at(i)->unsubscribe();// unsubscribe all filtered messages
           }//endFor
 
+          registerCallbackForSyncronizers(sensor_number); //initiate the syncronizers which belongs to the selection
           filtered_subscribers_.clear();
         }//endIf
 
