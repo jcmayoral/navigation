@@ -238,13 +238,10 @@ namespace collision_detector_diagnoser
   void CollisionDetectorDiagnoser::unregisterCallbackForSyncronizers(int number){
     ROS_INFO("unregisterCallbackForSyncronizers");
 
-    switch (number){
-      case 2: delete syncronizer_for_two_; break;
-      case 3: delete syncronizer_for_three_; break;
-      case 4: delete syncronizer_for_four_; break;
-      case 5: delete syncronizer_for_five_; break;
-    //free(syncronizer_for_five_);
-    }
+    delete syncronizer_for_two_;
+    delete syncronizer_for_three_;
+    delete syncronizer_for_four_;
+    delete syncronizer_for_five_;
 
     ROS_INFO("unregisterCallbackForSyncronizers 2");
 
