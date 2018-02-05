@@ -92,6 +92,7 @@ namespace collision_detector_diagnoser
     mode_ = config.mode;
     filter_ = config.allow_filter;
     percentage_threshold_ = config.percentage_threshold;
+    sensor_number_ = config.sensor_sources;
     initialize(sensor_number_);
   }
 
@@ -176,8 +177,39 @@ namespace collision_detector_diagnoser
     }
   }
 
+  void CollisionDetectorDiagnoser::fiveSensorsCallBack(const fusion_msgs::sensorFusionMsgConstPtr& detector_1,
+                                                        const fusion_msgs::sensorFusionMsgConstPtr& detector_2,
+                                                        const fusion_msgs::sensorFusionMsgConstPtr& detector_3,
+                                                        const fusion_msgs::sensorFusionMsgConstPtr& detector_4,
+                                                        const fusion_msgs::sensorFusionMsgConstPtr& detector_5){
+    ROS_INFO("Five Sensors");
+
+    list <fusion_msgs::sensorFusionMsg> list;
+    fusion_msgs::sensorFusionMsg tmp = *detector_1;
+    list.push_back(tmp);
+    tmp = *detector_2;
+    list.push_back(tmp);
+    tmp = *detector_3;
+    list.push_back(tmp);
+    tmp = *detector_4;
+    list.push_back(tmp);
+    tmp = *detector_5;
+    list.push_back(tmp);
+
+    if(fusion_approach_->detect(list)){
+      plotOrientation(list);
+      time_of_collision_ = detector_1->header; //TODO
+      isCollisionDetected = true;
+
+    }
+    else{
+      isCollisionDetected = false;
+    }
+  }
+
+
   void CollisionDetectorDiagnoser::simpleCallBack(const fusion_msgs::sensorFusionMsg msg){
-    ROS_DEBUG("Simple Filtering");
+    ROS_INFO("Simple Filtering");
 
     list <fusion_msgs::sensorFusionMsg> list;
     fusion_msgs::sensorFusionMsg tmp = msg;
@@ -205,6 +237,7 @@ namespace collision_detector_diagnoser
     delete syncronizer_for_two_;
     delete syncronizer_for_three_;
     delete syncronizer_for_four_;
+    delete syncronizer_for_five_;
   }
 
   void CollisionDetectorDiagnoser::registerCallbackForSyncronizers(int sensor_number){
@@ -220,6 +253,9 @@ namespace collision_detector_diagnoser
       case 4:
             syncronizer_for_four_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::fourSensorsCallBack,this,_1, _2,_3,_4));
             break;
+      case 5:
+            syncronizer_for_five_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::fiveSensorsCallBack,this,_1, _2,_3,_4,_5));
+            break;
 
       default:
       ROS_ERROR_STREAM("registerCallback Failure");
@@ -233,37 +269,38 @@ namespace collision_detector_diagnoser
     ROS_INFO_STREAM("initializing " << sensor_number << " sensors");
     ROS_INFO_STREAM("Method" << std::to_string(mode_) << " Selected");
 
-    if(!filter_){
+    if(!filter_){//Switching to unfiltered
+
         if (!filtered_subscribers_.empty()){
-          for(int i=0; i< sensor_number; i++){
-            filtered_subscribers_.at(i)->unsubscribe();
+          unregisterCallbackForSyncronizers(); // reset all syncronizers
+
+          for(int i=0; i< filtered_subscribers_.size(); i++){
+            filtered_subscribers_.at(i)->unsubscribe();// unsubscribe all filtered messages
           }//endFor
 
-          registerCallbackForSyncronizers(sensor_number);
           filtered_subscribers_.clear();
         }//endIf
 
-        for (int i = 0; i< sensor_number;i++){
+        for (int i = 0; i< sensor_number;i++){//add normal subscribers
           ros::Subscriber sub = nh.subscribe("collisions_"+std::to_string(i), 10, &CollisionDetectorDiagnoser::simpleCallBack, this);
           array_subcribers_.push_back(sub);
         }//endFor
 
       }//Endif
 
-    else{
-      for (int i = 0; i< array_subcribers_.size();i++){
+    else{// Switching to filtered messages
+      for (int i = 0; i< array_subcribers_.size();i++){//remove normal subscribers
         array_subcribers_[i].shutdown();
       }//endFor
 
       array_subcribers_.clear();
 
-      for(int i=0; i< sensor_number; i++){
+      for(int i=0; i< sensor_number; i++){// create subscribers to filter
         filtered_subscribers_.push_back(new message_filters::Subscriber<fusion_msgs::sensorFusionMsg>(nh, "collisions_"+std::to_string(i), 10));
       }//endFor
 
-
-      unregisterCallbackForSyncronizers();
-      registerCallbackForSyncronizers(sensor_number);
+      unregisterCallbackForSyncronizers(); // reset all syncronizers
+      registerCallbackForSyncronizers(sensor_number); //initiate the syncronizers which belongs to the selection
     }//endElse
 
     //Swap betweenModes;

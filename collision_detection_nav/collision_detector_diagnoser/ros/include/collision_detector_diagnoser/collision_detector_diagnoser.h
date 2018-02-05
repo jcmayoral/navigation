@@ -76,6 +76,13 @@ namespace collision_detector_diagnoser
                                 const fusion_msgs::sensorFusionMsgConstPtr& detector_3,
                                 const fusion_msgs::sensorFusionMsgConstPtr& detector_4);
 
+      void fiveSensorsCallBack(const fusion_msgs::sensorFusionMsgConstPtr& detector_1,
+                                const fusion_msgs::sensorFusionMsgConstPtr& detector_2,
+                                const fusion_msgs::sensorFusionMsgConstPtr& detector_3,
+                                const fusion_msgs::sensorFusionMsgConstPtr& detector_4,
+                                const fusion_msgs::sensorFusionMsgConstPtr& detector_5
+                              );
+
       void simpleCallBack(const fusion_msgs::sensorFusionMsg msg);
 
       //void secondCallBack(const sensor_msgs::ImageConstPtr& msg1, const sensor_msgs::ImageConstPtr&  msg2);
@@ -101,6 +108,7 @@ namespace collision_detector_diagnoser
       message_filters::Synchronizer<MySyncPolicy2>*syncronizer_for_two_;
       message_filters::Synchronizer<MySyncPolicy3>*syncronizer_for_three_;
       message_filters::Synchronizer<MySyncPolicy4>*syncronizer_for_four_;
+      message_filters::Synchronizer<MySyncPolicy5>*syncronizer_for_five_;
 
       ros::ServiceClient strength_srv_client_;
       ros::ServiceClient orientations_srv_client_;
