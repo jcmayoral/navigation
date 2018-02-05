@@ -93,8 +93,14 @@ namespace collision_detector_diagnoser
 
 
       void plotOrientation(list<fusion_msgs::sensorFusionMsg> v);
-      void unregisterCallbackForSyncronizers();
+      void unregisterCallbackForSyncronizers(int number);
       void registerCallbackForSyncronizers(int sensor_number);
+
+      void setUnfilteredPublishers(int sensor_number, ros::NodeHandle nh);
+      void setFilteredPublishers(int sensor_number, ros::NodeHandle nh);
+      void resetFilteredPublishers();
+      void resetUnFilteredPublishers();
+
 
     private:
       std::vector<ros::Subscriber> array_subcribers_;
