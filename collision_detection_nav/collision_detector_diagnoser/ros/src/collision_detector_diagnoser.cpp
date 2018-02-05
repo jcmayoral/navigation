@@ -191,6 +191,7 @@ namespace collision_detector_diagnoser
     //end for testing
 
     if (msg.msg == fusion_msgs::sensorFusionMsg::ERROR){
+      ROS_INFO_STREAM ("Collision detected by " << msg.sensor_id);
       time_of_collision_ = msg.header;
       isCollisionDetected = true;
 
@@ -300,7 +301,6 @@ namespace collision_detector_diagnoser
     msg.data ="ouch";
     speak_pub_.publish(msg);
 
-    std::cout << "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh";
 
     if(orientations_srv_client_.call(srv)){
       ROS_INFO("Orientations Computed Correctly");
