@@ -327,7 +327,7 @@ namespace collision_detector_diagnoser
 
     else{// Switching to filtered messages
       resetUnFilteredPublishers();
-      unregisterCallbackForSyncronizers(sensor_number);
+      unregisterCallbackForSyncronizers();
       setFilteredPublishers(sensor_number, nh);
     }//endElse
 
