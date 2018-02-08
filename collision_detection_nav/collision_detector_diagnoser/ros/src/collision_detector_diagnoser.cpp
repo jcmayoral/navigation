@@ -235,16 +235,8 @@ namespace collision_detector_diagnoser
     }
   }
 
-  void CollisionDetectorDiagnoser::unregisterCallbackForSyncronizers(int number){
-    ROS_INFO("unregisterCallbackForSyncronizers");
-
-    delete syncronizer_for_two_;
-    delete syncronizer_for_three_;
-    delete syncronizer_for_four_;
-    delete syncronizer_for_five_;
-
-    ROS_INFO("unregisterCallbackForSyncronizers 2");
-
+  void CollisionDetectorDiagnoser::unregisterCallbackForSyncronizers(){
+    main_connection.disconnect();
   }
 
   void CollisionDetectorDiagnoser::registerCallbackForSyncronizers(int sensor_number){
@@ -255,20 +247,20 @@ namespace collision_detector_diagnoser
       case 2:
         syncronizer_for_two_ = new message_filters::Synchronizer<MySyncPolicy2>(MySyncPolicy2(10), *filtered_subscribers_.at(0),
                                                                                                *filtered_subscribers_.at(1));
-        syncronizer_for_two_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::twoSensorsCallBack,this,_1, _2));
+        main_connection = syncronizer_for_two_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::twoSensorsCallBack,this,_1, _2));
         break;
       case 3:
         syncronizer_for_three_ = new message_filters::Synchronizer<MySyncPolicy3>(MySyncPolicy3(10), *filtered_subscribers_.at(0),
                                                                                                      *filtered_subscribers_.at(1),
                                                                                                      *filtered_subscribers_.at(2));
-        syncronizer_for_three_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::threeSensorsCallBack,this,_1, _2,_3));
+        main_connection = syncronizer_for_three_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::threeSensorsCallBack,this,_1, _2,_3));
         break;
       case 4:
         syncronizer_for_four_ = new message_filters::Synchronizer<MySyncPolicy4>(MySyncPolicy4(10), *filtered_subscribers_.at(0),
                                                                                                *filtered_subscribers_.at(1),
                                                                                                *filtered_subscribers_.at(2),
                                                                                                *filtered_subscribers_.at(3));
-        syncronizer_for_four_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::fourSensorsCallBack,this,_1, _2,_3,_4));
+        main_connection = syncronizer_for_four_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::fourSensorsCallBack,this,_1, _2,_3,_4));
         break;
       case 5:
         syncronizer_for_five_ = new message_filters::Synchronizer<MySyncPolicy5>(MySyncPolicy5(10), *filtered_subscribers_.at(0),
@@ -276,7 +268,7 @@ namespace collision_detector_diagnoser
                                                                                              *filtered_subscribers_.at(2),
                                                                                              *filtered_subscribers_.at(3),
                                                                                              *filtered_subscribers_.at(4));
-        syncronizer_for_five_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::fiveSensorsCallBack,this,_1, _2,_3,_4,_5));
+        main_connection = syncronizer_for_five_->registerCallback(boost::bind(&CollisionDetectorDiagnoser::fiveSensorsCallBack,this,_1, _2,_3,_4,_5));
         break;
 
       default:

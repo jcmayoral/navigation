@@ -93,16 +93,16 @@ namespace collision_detector_diagnoser
 
 
       void plotOrientation(list<fusion_msgs::sensorFusionMsg> v);
-      void unregisterCallbackForSyncronizers(int number);
-      void registerCallbackForSyncronizers(int sensor_number);
 
+    private:
+
+      void unregisterCallbackForSyncronizers();
+      void registerCallbackForSyncronizers(int sensor_number);
       void setUnfilteredPublishers(int sensor_number, ros::NodeHandle nh);
       void setFilteredPublishers(int sensor_number, ros::NodeHandle nh);
       void resetFilteredPublishers();
       void resetUnFilteredPublishers();
 
-
-    private:
       std::vector<ros::Subscriber> array_subcribers_;
       bool isCollisionDetected;
       std_msgs::Header time_of_collision_;
@@ -115,6 +115,8 @@ namespace collision_detector_diagnoser
       message_filters::Synchronizer<MySyncPolicy3>*syncronizer_for_three_;
       message_filters::Synchronizer<MySyncPolicy4>*syncronizer_for_four_;
       message_filters::Synchronizer<MySyncPolicy5>*syncronizer_for_five_;
+
+      message_filters::Connection main_connection;
 
       ros::ServiceClient strength_srv_client_;
       ros::ServiceClient orientations_srv_client_;
