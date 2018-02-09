@@ -42,13 +42,14 @@ namespace collision_detector_diagnoser
     ros::NodeHandle private_n("~");
     fault_.type_ =  FaultTopology::UNKNOWN_TYPE;
     fault_.cause_ = FaultTopology::UNKNOWN;
-    strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("kinetic_energy_drop");
-    orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("collision_checker");
+    strength_srv_client_ = private_n.serviceClient<kinetic_energy_monitor::KineticEnergyMonitorMsg>("/kinetic_energy_drop");
+    orientations_srv_client_ = private_n.serviceClient<footprint_checker::CollisionCheckerMsg>("/collision_checker");
     speak_pub_ = private_n.advertise<std_msgs::String>("/say",1);
+    ros::Duration(2).sleep();
 
-    while (speak_pub_.getNumSubscribers() < 1){
+    /*while (speak_pub_.getNumSubscribers() < 1){
       ROS_INFO_ONCE("Waiting Subscriber for say server");
-    }
+    }*/
 
     orientation_pub_ = private_n.advertise<geometry_msgs::PoseArray>("measured_collision_orientations", 1);
 
@@ -388,7 +389,8 @@ namespace collision_detector_diagnoser
       ROS_INFO_STREAM("Strength: " << srv.response.energy_lost);
     }
 
-    fault_.cause_ = FaultTopology::MISLOCALIZATION;
+    //fault_.cause_ = FaultTopology::MISLOCALIZATION;
+    fault_.cause_ = FaultTopology::STATIC_OBSTACLE;
     ROS_ERROR_ONCE("Collision FOUND");
     isCollisionDetected = false;
   }

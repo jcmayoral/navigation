@@ -426,7 +426,7 @@ namespace move_base_fault_tolerant {
         ROS_ERROR("move_base in state RECOVERING");
         //FaultTolerantMoveBase::recoveryFault();
         //publishZeroVelocity();
-        bool result = true;
+        bool result = false;
         int i = 0;
         fd_->isolateFault();
 
@@ -440,6 +440,7 @@ namespace move_base_fault_tolerant {
 
         if (i == fault_recovery_behaviors_.size())
              ROS_WARN("Not Fault Recovery Behavior Found");
+             result = false;
 
 	      if (!result){
           as_->setAborted(move_base_msgs::MoveBaseResult(), "Collision Recovery Failure.");

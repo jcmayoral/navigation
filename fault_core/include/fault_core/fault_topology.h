@@ -17,6 +17,7 @@ namespace fault_core {
         MISLOCALIZATION,
         DYNAMIC_OBSTACLE,
         MAP_UNACCURACY,
+        STATIC_OBSTACLE,
         UNKNOWN
       };
     FaultType type_;
