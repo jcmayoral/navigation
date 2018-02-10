@@ -8,8 +8,8 @@ find_package(catkin REQUIRED
         pluginlib
         actionlib
         move_base
-        dynamic_reconfigure
-        message_generation
+        #dynamic_reconfigure
+        #message_generation
         move_base_msgs
         nav_core
         fault_core
@@ -45,8 +45,8 @@ target_link_libraries(move_base_fault_tolerant
     ${catkin_LIBRARIES}
     ${move_base}
     )
-add_dependencies(move_base_fault_tolerant move_base_fault_tolerant_gencfg)
-add_dependencies(move_base_fault_tolerant geometry_msgs_gencpp)
+#add_dependencies(move_base_fault_tolerant move_base_gencfg)
+#add_dependencies(move_base_fault_tolerant geometry_msgs_gencpp)
 
 add_executable(move_base_fault_tolerant_node
   src/move_base_fault_tolerant_node.cpp

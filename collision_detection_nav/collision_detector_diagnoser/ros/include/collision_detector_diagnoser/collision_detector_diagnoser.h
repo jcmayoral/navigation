@@ -102,6 +102,7 @@ namespace collision_detector_diagnoser
       void setFilteredPublishers(int sensor_number, ros::NodeHandle nh);
       void resetFilteredPublishers();
       void resetUnFilteredPublishers();
+      void setDynamicReconfigureServer();
 
       std::vector<ros::Subscriber> array_subcribers_;
       bool isCollisionDetected;
