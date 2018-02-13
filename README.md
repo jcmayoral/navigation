@@ -6,8 +6,8 @@ Move_base_fault_tolerant provides two additional plugin types: FaultDetector and
 
 This stack consists of:
 
-1. fault_core: custom messages for collisions.
-1. fusion_msgs: custom messges for sensor_fusion approach.
+1. fault_core: custom interfaces for faults.
+1. fusion_msgs: custom messages for sensor_fusion approach.
 1. navigation_manager: consists in a modified version of the move_base(most of them setters and getter to private attributes). In addition the move_base_fault_tolerant packages inherits the modified version to mantain an strategy to minimize commits.
 1. collision_detection_nav: provides FaultDetection plugins packages.
 1. collision_recovery_nav: provides FaultRecovery plugin packages.
